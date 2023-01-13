@@ -1,0 +1,42 @@
+{# MACRO #}
+{% macro module_prefix() %}
+    {%- if prefix %}
+{{ prefix }}_
+    {%- else %}
+{{ file_name }}_
+    {%- endif %}
+{%- endmacro %}
+
+{#- TEMPLATE NAMESPACE #}
+{% set tmp = namespace() %}
+
+{#- TEMPLATE #}
+-- Created with Corsair v{{ corsair_ver }}
+
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.math_real.all;
+
+
+package {{ file_name }} is
+
+
+
+  constant {{ module_prefix()|upper }}BASE_ADDR : std_logic_vector({{ config['address_width'] }}-1 downto 0) := to_unsigned({{ config['base_address'] }}, {{ config['address_width'] }});
+
+{% for reg in rmap %}
+  -- {{ reg.name }} - {{ reg.description }}
+  constant {{ module_prefix()|upper }}{{ reg.name.upper() }}_ADDR : std_logic_vector({{ config['address_width'] }}-1 downto 0) := to_unsigned({{ reg.address }}, {{ config['address_width'] }});
+  constant {{ module_prefix()|upper }}{{ reg.name.upper() }}_RESET : std_logic_vector({{ config['data_width'] }}-1 downto 0) := to_unsigned({{ reg.reset }}, {{ config['data_width'] }});
+
+{% endfor %}
+
+
+end package {{ file_name }};
+
+
+package body {{ file_name }} is
+
+end package body;
+
