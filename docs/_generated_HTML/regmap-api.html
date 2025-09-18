@@ -1,0 +1,542 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register map &mdash; Corsair  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7b1f1a5f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Generators" href="generators-api.html" />
+    <link rel="prev" title="LocalBus" href="lb.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Corsair
+              <img src="_static/logo_white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regmap.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration file</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Protocols</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="apb.html">APB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="axil.html">AXI-Lite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="amm.html">Avalon-MM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lb.html">LocalBus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Register map</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#enumvalue">EnumValue</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.EnumValue"><code class="docutils literal notranslate"><span class="pre">EnumValue</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.EnumValue.as_dict"><code class="docutils literal notranslate"><span class="pre">EnumValue.as_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.EnumValue.as_str"><code class="docutils literal notranslate"><span class="pre">EnumValue.as_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.EnumValue.description"><code class="docutils literal notranslate"><span class="pre">EnumValue.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.EnumValue.name"><code class="docutils literal notranslate"><span class="pre">EnumValue.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.EnumValue.validate"><code class="docutils literal notranslate"><span class="pre">EnumValue.validate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.EnumValue.value"><code class="docutils literal notranslate"><span class="pre">EnumValue.value</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#bitfield">BitField</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.BitField"><code class="docutils literal notranslate"><span class="pre">BitField</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.access"><code class="docutils literal notranslate"><span class="pre">BitField.access</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.add_enums"><code class="docutils literal notranslate"><span class="pre">BitField.add_enums()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.as_dict"><code class="docutils literal notranslate"><span class="pre">BitField.as_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.as_str"><code class="docutils literal notranslate"><span class="pre">BitField.as_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.bits"><code class="docutils literal notranslate"><span class="pre">BitField.bits</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.byte_strobes"><code class="docutils literal notranslate"><span class="pre">BitField.byte_strobes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.description"><code class="docutils literal notranslate"><span class="pre">BitField.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.enum_names"><code class="docutils literal notranslate"><span class="pre">BitField.enum_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.enums"><code class="docutils literal notranslate"><span class="pre">BitField.enums</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.hardware"><code class="docutils literal notranslate"><span class="pre">BitField.hardware</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.is_vector"><code class="docutils literal notranslate"><span class="pre">BitField.is_vector()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.lsb"><code class="docutils literal notranslate"><span class="pre">BitField.lsb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.mask"><code class="docutils literal notranslate"><span class="pre">BitField.mask</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.msb"><code class="docutils literal notranslate"><span class="pre">BitField.msb</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.name"><code class="docutils literal notranslate"><span class="pre">BitField.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.reset"><code class="docutils literal notranslate"><span class="pre">BitField.reset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.validate"><code class="docutils literal notranslate"><span class="pre">BitField.validate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.BitField.width"><code class="docutils literal notranslate"><span class="pre">BitField.width</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#register">Register</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.Register"><code class="docutils literal notranslate"><span class="pre">Register</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.access"><code class="docutils literal notranslate"><span class="pre">Register.access</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.add_bitfields"><code class="docutils literal notranslate"><span class="pre">Register.add_bitfields()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.address"><code class="docutils literal notranslate"><span class="pre">Register.address</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.as_dict"><code class="docutils literal notranslate"><span class="pre">Register.as_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.as_str"><code class="docutils literal notranslate"><span class="pre">Register.as_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.bitfield_names"><code class="docutils literal notranslate"><span class="pre">Register.bitfield_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.bitfields"><code class="docutils literal notranslate"><span class="pre">Register.bitfields</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.description"><code class="docutils literal notranslate"><span class="pre">Register.description</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.name"><code class="docutils literal notranslate"><span class="pre">Register.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.reset"><code class="docutils literal notranslate"><span class="pre">Register.reset</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.Register.validate"><code class="docutils literal notranslate"><span class="pre">Register.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#registermap">RegisterMap</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.RegisterMap"><code class="docutils literal notranslate"><span class="pre">RegisterMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.add_registers"><code class="docutils literal notranslate"><span class="pre">RegisterMap.add_registers()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.as_dict"><code class="docutils literal notranslate"><span class="pre">RegisterMap.as_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.as_str"><code class="docutils literal notranslate"><span class="pre">RegisterMap.as_str()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.read_file"><code class="docutils literal notranslate"><span class="pre">RegisterMap.read_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.read_json"><code class="docutils literal notranslate"><span class="pre">RegisterMap.read_json()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.read_txt"><code class="docutils literal notranslate"><span class="pre">RegisterMap.read_txt()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.read_yaml"><code class="docutils literal notranslate"><span class="pre">RegisterMap.read_yaml()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.reg_names"><code class="docutils literal notranslate"><span class="pre">RegisterMap.reg_names</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.regs"><code class="docutils literal notranslate"><span class="pre">RegisterMap.regs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.RegisterMap.validate"><code class="docutils literal notranslate"><span class="pre">RegisterMap.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="generators-api.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config-api.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Developer’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Corsair</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Register map</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/regmap-api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="register-map">
+<span id="regmap-api"></span><h1>Register map<a class="headerlink" href="#register-map" title="Link to this heading"></a></h1>
+<section id="enumvalue">
+<h2>EnumValue<a class="headerlink" href="#enumvalue" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.EnumValue">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.</span></span><span class="sig-name descname"><span class="pre">EnumValue</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'enum'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Enumerated</span> <span class="pre">value'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/enum.html#EnumValue"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.EnumValue" title="Link to this definition"></a></dt>
+<dd><p>Enumerated value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Enum name</p></li>
+<li><p><strong>value</strong> (<em>int</em>) – Enum value</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Enum description</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.EnumValue.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/enum.html#EnumValue.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.EnumValue.as_dict" title="Link to this definition"></a></dt>
+<dd><p>Create a dictionary with the key attributes of the bit field.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.EnumValue.as_str">
+<span class="sig-name descname"><span class="pre">as_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/enum.html#EnumValue.as_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.EnumValue.as_str" title="Link to this definition"></a></dt>
+<dd><p>Create an indented string with the enum information.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.EnumValue.description">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#corsair.EnumValue.description" title="Link to this definition"></a></dt>
+<dd><p>Description of the enum.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.EnumValue.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#corsair.EnumValue.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the enum.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.EnumValue.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/enum.html#EnumValue.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.EnumValue.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate parameters of the enum.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.EnumValue.value">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#corsair.EnumValue.value" title="Link to this definition"></a></dt>
+<dd><p>Value of the enum.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="bitfield">
+<h2>BitField<a class="headerlink" href="#bitfield" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.BitField">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.</span></span><span class="sig-name descname"><span class="pre">BitField</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'val'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Value</span> <span class="pre">of</span> <span class="pre">the</span> <span class="pre">register'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lsb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">access</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'rw'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hardware</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'n'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/bitfield.html#BitField"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.BitField" title="Link to this definition"></a></dt>
+<dd><p>Bit field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Bit field name</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Bit field description</p></li>
+<li><p><strong>reset</strong> (<em>int</em>) – Bit field reset vaue</p></li>
+<li><p><strong>width</strong> (<em>int</em>) – Bit field width vaue</p></li>
+<li><p><strong>lsb</strong> (<em>int</em>) – Bit field LSB vaue</p></li>
+<li><p><strong>access</strong> (<em>str</em>) – Bit field access mode</p></li>
+<li><p><strong>hardware</strong> (<em>str</em>) – Bit field hardware options</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.access">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">access</span></span><a class="headerlink" href="#corsair.BitField.access" title="Link to this definition"></a></dt>
+<dd><p>Access mode for the bitfield.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.BitField.add_enums">
+<span class="sig-name descname"><span class="pre">add_enums</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_enums</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/bitfield.html#BitField.add_enums"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.BitField.add_enums" title="Link to this definition"></a></dt>
+<dd><p>Add enum or list of enums.</p>
+<p>Enums are automatically sorted and stored in the ascending order of value attributes.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.BitField.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/bitfield.html#BitField.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.BitField.as_dict" title="Link to this definition"></a></dt>
+<dd><p>Create a dictionary with the key attributes of the bit field.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.BitField.as_str">
+<span class="sig-name descname"><span class="pre">as_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/bitfield.html#BitField.as_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.BitField.as_str" title="Link to this definition"></a></dt>
+<dd><p>Create an indented string with the bit field information.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.bits">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bits</span></span><a class="headerlink" href="#corsair.BitField.bits" title="Link to this definition"></a></dt>
+<dd><p>Create list with all positions of the bits represented by the bit field.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.byte_strobes">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">byte_strobes</span></span><a class="headerlink" href="#corsair.BitField.byte_strobes" title="Link to this definition"></a></dt>
+<dd><p>Dictionary with LSB and MSB values for the every byte in the write data bus.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.description">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#corsair.BitField.description" title="Link to this definition"></a></dt>
+<dd><p>Description of the bitfield.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.enum_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enum_names</span></span><a class="headerlink" href="#corsair.BitField.enum_names" title="Link to this definition"></a></dt>
+<dd><p>List with all enum names.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.enums">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enums</span></span><a class="headerlink" href="#corsair.BitField.enums" title="Link to this definition"></a></dt>
+<dd><p>List with enum objects.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.hardware">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hardware</span></span><a class="headerlink" href="#corsair.BitField.hardware" title="Link to this definition"></a></dt>
+<dd><p>Hardware mode for the bitfield.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.BitField.is_vector">
+<span class="sig-name descname"><span class="pre">is_vector</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/bitfield.html#BitField.is_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.BitField.is_vector" title="Link to this definition"></a></dt>
+<dd><p>Check if the width of the bit field &gt; 1.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.lsb">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lsb</span></span><a class="headerlink" href="#corsair.BitField.lsb" title="Link to this definition"></a></dt>
+<dd><p>LSB value of the bitfield.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.mask">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mask</span></span><a class="headerlink" href="#corsair.BitField.mask" title="Link to this definition"></a></dt>
+<dd><p>Bit mask for the field.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.msb">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">msb</span></span><a class="headerlink" href="#corsair.BitField.msb" title="Link to this definition"></a></dt>
+<dd><p>Position of most significant bit (MSB) of the field.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#corsair.BitField.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the bit field.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.reset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><a class="headerlink" href="#corsair.BitField.reset" title="Link to this definition"></a></dt>
+<dd><p>Inital value of the bitfield.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.BitField.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/bitfield.html#BitField.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.BitField.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate parameters of the bit field.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.BitField.width">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">width</span></span><a class="headerlink" href="#corsair.BitField.width" title="Link to this definition"></a></dt>
+<dd><p>Width value of the bitfield.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="register">
+<h2>Register<a class="headerlink" href="#register" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.Register">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.</span></span><span class="sig-name descname"><span class="pre">Register</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'csr0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Control</span> <span class="pre">and</span> <span class="pre">status</span> <span class="pre">register</span> <span class="pre">0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/reg.html#Register"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.Register" title="Link to this definition"></a></dt>
+<dd><p>Control and status register.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Bit field name</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Bit field description</p></li>
+<li><p><strong>address</strong> (<em>int</em><em>, </em><em>None</em>) – Register address</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.Register.access">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">access</span></span><a class="headerlink" href="#corsair.Register.access" title="Link to this definition"></a></dt>
+<dd><p>Register access mode, based on bitfields.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.Register.add_bitfields">
+<span class="sig-name descname"><span class="pre">add_bitfields</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_bitfields</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/reg.html#Register.add_bitfields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.Register.add_bitfields" title="Link to this definition"></a></dt>
+<dd><p>Add bit field or list of bit feilds.</p>
+<p>Bit fields are automatically sorted and stored in the ascending order of msb attributes.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.Register.address">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">address</span></span><a class="headerlink" href="#corsair.Register.address" title="Link to this definition"></a></dt>
+<dd><p>Address of the register.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.Register.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/reg.html#Register.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.Register.as_dict" title="Link to this definition"></a></dt>
+<dd><p>Create a dictionary with the key attributes of the register.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.Register.as_str">
+<span class="sig-name descname"><span class="pre">as_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/reg.html#Register.as_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.Register.as_str" title="Link to this definition"></a></dt>
+<dd><p>Create an indented string with the information about the register.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.Register.bitfield_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bitfield_names</span></span><a class="headerlink" href="#corsair.Register.bitfield_names" title="Link to this definition"></a></dt>
+<dd><p>List with all bit field names.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.Register.bitfields">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bitfields</span></span><a class="headerlink" href="#corsair.Register.bitfields" title="Link to this definition"></a></dt>
+<dd><p>List with bit field objects.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.Register.description">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">description</span></span><a class="headerlink" href="#corsair.Register.description" title="Link to this definition"></a></dt>
+<dd><p>Description of the register.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.Register.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#corsair.Register.name" title="Link to this definition"></a></dt>
+<dd><p>Name of the register.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.Register.reset">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reset</span></span><a class="headerlink" href="#corsair.Register.reset" title="Link to this definition"></a></dt>
+<dd><p>Reset value of the refister after reset.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.Register.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/reg.html#Register.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.Register.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate parameters of the register.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="registermap">
+<h2>RegisterMap<a class="headerlink" href="#registermap" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.RegisterMap">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.</span></span><span class="sig-name descname"><span class="pre">RegisterMap</span></span><a class="reference internal" href="_modules/corsair/regmap.html#RegisterMap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.RegisterMap" title="Link to this definition"></a></dt>
+<dd><p>CSR map</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.RegisterMap.add_registers">
+<span class="sig-name descname"><span class="pre">add_registers</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_regs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/regmap.html#RegisterMap.add_registers"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.RegisterMap.add_registers" title="Link to this definition"></a></dt>
+<dd><p>Add list of registers.</p>
+<p>Register are automatically sorted and stored in the ascending order of addresses.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.RegisterMap.as_dict">
+<span class="sig-name descname"><span class="pre">as_dict</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/regmap.html#RegisterMap.as_dict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.RegisterMap.as_dict" title="Link to this definition"></a></dt>
+<dd><p>Return register map as a dictionary.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.RegisterMap.as_str">
+<span class="sig-name descname"><span class="pre">as_str</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/regmap.html#RegisterMap.as_str"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.RegisterMap.as_str" title="Link to this definition"></a></dt>
+<dd><p>Create indented string with the information about register map.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.RegisterMap.read_file">
+<span class="sig-name descname"><span class="pre">read_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/regmap.html#RegisterMap.read_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.RegisterMap.read_file" title="Link to this definition"></a></dt>
+<dd><p>Read register map from file (based on extension).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.RegisterMap.read_json">
+<span class="sig-name descname"><span class="pre">read_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/regmap.html#RegisterMap.read_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.RegisterMap.read_json" title="Link to this definition"></a></dt>
+<dd><p>Read register map from JSON file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.RegisterMap.read_txt">
+<span class="sig-name descname"><span class="pre">read_txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/regmap.html#RegisterMap.read_txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.RegisterMap.read_txt" title="Link to this definition"></a></dt>
+<dd><p>Read register map from text file.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.RegisterMap.read_yaml">
+<span class="sig-name descname"><span class="pre">read_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/regmap.html#RegisterMap.read_yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.RegisterMap.read_yaml" title="Link to this definition"></a></dt>
+<dd><p>Read register map from YAML file.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.RegisterMap.reg_names">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">reg_names</span></span><a class="headerlink" href="#corsair.RegisterMap.reg_names" title="Link to this definition"></a></dt>
+<dd><p>List with all register names.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="corsair.RegisterMap.regs">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">regs</span></span><a class="headerlink" href="#corsair.RegisterMap.regs" title="Link to this definition"></a></dt>
+<dd><p>List with register objects.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.RegisterMap.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/regmap.html#RegisterMap.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.RegisterMap.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate the register map.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="lb.html" class="btn btn-neutral float-left" title="LocalBus" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="generators-api.html" class="btn btn-neutral float-right" title="Generators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, esynr3z.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>corsair.regmap &mdash; Corsair  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7b1f1a5f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Corsair
+              <img src="../../_static/logo_white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../regmap.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config.html">Configuration file</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Protocols</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../apb.html">APB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../axil.html">AXI-Lite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../amm.html">Avalon-MM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lb.html">LocalBus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../regmap-api.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../generators-api.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config-api.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Developer’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Corsair</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">corsair.regmap</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for corsair.regmap</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Register map</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.reg</span><span class="w"> </span><span class="kn">import</span> <span class="n">Register</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.bitfield</span><span class="w"> </span><span class="kn">import</span> <span class="n">BitField</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.enum</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnumValue</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+
+
+<div class="viewcode-block" id="RegisterMap">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.RegisterMap">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RegisterMap</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;CSR map&quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regs</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Failed to compare &#39;</span><span class="si">%s</span><span class="s2">&#39; with &#39;</span><span class="si">%s</span><span class="s2">&#39;!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Failed to compare &#39;</span><span class="si">%s</span><span class="s2">&#39; with &#39;</span><span class="si">%s</span><span class="s2">&#39;!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;RegisterMap()&#39;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_str</span><span class="p">()</span>
+
+<div class="viewcode-block" id="RegisterMap.as_str">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.RegisterMap.as_str">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create indented string with the information about register map.&quot;&quot;&quot;</span>
+        <span class="n">inner_indent</span> <span class="o">=</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span>
+        <span class="n">regs</span> <span class="o">=</span> <span class="p">[</span><span class="n">reg</span><span class="o">.</span><span class="n">as_str</span><span class="p">(</span><span class="n">inner_indent</span><span class="p">)</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regs</span><span class="p">]</span>
+        <span class="n">regs_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">regs</span><span class="p">)</span> <span class="k">if</span> <span class="n">regs</span> <span class="k">else</span> <span class="n">inner_indent</span> <span class="o">+</span> <span class="s1">&#39;empty&#39;</span>
+        <span class="k">return</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;register map:</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">+</span> <span class="n">regs_str</span></div>
+
+
+<div class="viewcode-block" id="RegisterMap.as_dict">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.RegisterMap.as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Return register map as a dictionary.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="p">:</span> <span class="n">reg</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regs</span><span class="p">}</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate number of the registers&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_regs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create iterator over registers&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_regs</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get register by name or index&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">reg</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">reg</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regs</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;There is no register with a name/index &#39;</span><span class="si">%s</span><span class="s2">&#39;!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set register by key&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Not able to set &#39;</span><span class="si">%s</span><span class="s2">&#39; register directly!&quot;</span>
+                       <span class="s2">&quot; Try use add_registers() method.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reg_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List with all register names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_addr_resolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Resolve address for a register with no address.&quot;&quot;&quot;</span>
+        <span class="c1"># some error checks</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">,</span> \
+            <span class="s2">&quot;Register &#39;</span><span class="si">%s</span><span class="s2">&#39; with no address is not allowed to be the first register in a map!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">assert</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;address_increment&#39;</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">&#39;none&#39;</span><span class="p">,</span> \
+            <span class="s2">&quot;Register &#39;</span><span class="si">%s</span><span class="s2">&#39; with no address is not allowed when address auto increment is disabled!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="n">prev_addr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">regs</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">address</span>
+
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;address_increment&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;data_width&#39;</span><span class="p">:</span>
+            <span class="n">addr_step</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;data_width&#39;</span><span class="p">]</span> <span class="o">//</span> <span class="mi">8</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">addr_step</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;address_increment&#39;</span><span class="p">]</span>
+
+        <span class="n">reg</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">prev_addr</span> <span class="o">+</span> <span class="n">addr_step</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_addr_check_alignment</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check address alignment.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;address_alignment&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
+            <span class="n">align_val</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;address_alignment&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;data_width&#39;</span><span class="p">:</span>
+            <span class="n">align_val</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;data_width&#39;</span><span class="p">]</span> <span class="o">//</span> <span class="mi">8</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">align_val</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;address_alignment&#39;</span><span class="p">]</span>
+
+        <span class="k">assert</span> <span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">address</span> <span class="o">%</span> <span class="n">align_val</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">,</span> \
+            <span class="s2">&quot;Register &#39;</span><span class="si">%s</span><span class="s2">&#39; with address &#39;</span><span class="si">%d</span><span class="s2">&#39; is not </span><span class="si">%d</span><span class="s2"> bytes alligned!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">reg</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">align_val</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_addr_check_conflicts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">reg</span><span class="p">):</span>
+        <span class="n">addresses</span> <span class="o">=</span> <span class="p">[</span><span class="n">reg</span><span class="o">.</span><span class="n">address</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">reg</span><span class="o">.</span><span class="n">address</span> <span class="ow">in</span> <span class="n">addresses</span><span class="p">:</span>
+            <span class="n">conflict_reg</span> <span class="o">=</span> <span class="bp">self</span><span class="p">[</span><span class="n">addresses</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">address</span><span class="p">)]</span>
+            <span class="k">assert</span> <span class="kc">False</span><span class="p">,</span> <span class="s2">&quot;Register &#39;</span><span class="si">%s</span><span class="s2">&#39; with address &#39;</span><span class="si">%d</span><span class="s2">&#39; conflicts with register &#39;</span><span class="si">%s</span><span class="s2">&#39; with the same address!&quot;</span> <span class="o">%</span> \
+                <span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">reg</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="n">conflict_reg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">regs</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List with register objects.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_regs</span>
+
+<div class="viewcode-block" id="RegisterMap.add_registers">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.RegisterMap.add_registers">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_registers</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_regs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add list of registers.</span>
+
+<span class="sd">        Register are automatically sorted and stored in the ascending order of addresses.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># hack to handle single elements</span>
+        <span class="n">new_regs</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">listify</span><span class="p">(</span><span class="n">new_regs</span><span class="p">)</span>
+
+        <span class="c1"># add registers to the list one by one</span>
+        <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="n">new_regs</span><span class="p">:</span>
+            <span class="c1"># check existance</span>
+            <span class="k">assert</span> <span class="n">reg</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_names</span><span class="p">,</span> \
+                <span class="s2">&quot;Register with name &#39;</span><span class="si">%s</span><span class="s2">&#39; is already present!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="c1"># aplly calculated address if register address is empty</span>
+            <span class="k">if</span> <span class="n">reg</span><span class="o">.</span><span class="n">address</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_addr_resolve</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span>
+            <span class="c1"># check address alignment</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_addr_check_alignment</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span>
+            <span class="c1"># check address conflicts</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_addr_check_conflicts</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span>
+            <span class="c1"># if we here - all is ok and register can be added</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># find position to insert register and not to break ascending order of addresses</span>
+                <span class="n">reg_idx</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_regs</span><span class="p">)</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">address</span> <span class="o">&gt;</span> <span class="n">reg</span><span class="o">.</span><span class="n">address</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_regs</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">reg_idx</span><span class="p">,</span> <span class="n">reg</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="c1"># when registers list is empty or all addresses are less than the current one</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_regs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="RegisterMap.validate">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.RegisterMap.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate the register map.&quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regs</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">reg_names</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> \
+                <span class="s2">&quot;Register &#39;</span><span class="si">%s</span><span class="s2">&#39; name is not unique!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">reg</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="RegisterMap.read_file">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.RegisterMap.read_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read register map from file (based on extension).&quot;&quot;&quot;</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_ext</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ext</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;.yaml&#39;</span><span class="p">,</span> <span class="s1">&#39;.yml&#39;</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_yaml</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.json&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_json</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">ext</span> <span class="o">==</span> <span class="s1">&#39;.txt&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">read_txt</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown extension &#39;</span><span class="si">%s</span><span class="s2">&#39; of the file &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="n">path</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="RegisterMap.read_json">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.RegisterMap.read_json">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read register map from JSON file.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fill_from_file_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;regmap&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="RegisterMap.read_yaml">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.RegisterMap.read_yaml">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_yaml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read register map from YAML file.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fill_from_file_data</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s1">&#39;regmap&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="RegisterMap.read_txt">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.RegisterMap.read_txt">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">read_txt</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Read register map from text file.&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">raw_lines</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">reg_start_idx</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">raw_lines</span><span class="p">):</span>
+                <span class="k">if</span> <span class="s1">&#39;-----&#39;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                    <span class="n">reg_start_idx</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="k">if</span> <span class="n">reg_start_idx</span> <span class="ow">and</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">reg_start_idx</span><span class="p">:</span>
+                    <span class="c1"># register with one bitfield template</span>
+                    <span class="n">reg</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+                           <span class="s2">&quot;bitfields&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;access&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;hardware&quot;</span><span class="p">:</span> <span class="kc">None</span><span class="p">}]}</span>
+                    <span class="c1"># prepare the line</span>
+                    <span class="n">line_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;|&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]]</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line_data</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">7</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Not enough / too much columns in line </span><span class="si">%d</span><span class="s2">. Plese fix!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">))</span>
+                    <span class="c1"># extract register properties</span>
+                    <span class="k">if</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1"># address value can be ommited</span>
+                        <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+                    <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;address&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+                    <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                    <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;bitfields&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+                    <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;bitfields&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;access&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+                    <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;bitfields&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;hardware&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+                    <span class="k">if</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">4</span><span class="p">]:</span>  <span class="c1"># reset value can be ommited</span>
+                        <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;bitfields&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;reset&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+                    <span class="n">reg</span><span class="p">[</span><span class="s2">&quot;description&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">line_data</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">reg_start_idx</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Can&#39;t find table with registers!&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fill_from_file_data</span><span class="p">(</span><span class="n">data</span><span class="p">)</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_fill_from_file_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fill register map with data from file.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_regs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">data_reg</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
+            <span class="n">data_reg_filtered</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data_reg</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">&#39;bitfields&#39;</span><span class="p">}</span>
+            <span class="n">reg</span> <span class="o">=</span> <span class="n">Register</span><span class="p">(</span><span class="o">**</span><span class="n">data_reg_filtered</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">data_bf</span> <span class="ow">in</span> <span class="n">data_reg</span><span class="p">[</span><span class="s1">&#39;bitfields&#39;</span><span class="p">]:</span>
+                <span class="n">data_bf_filtered</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">data_bf</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="o">!=</span> <span class="s1">&#39;enums&#39;</span><span class="p">}</span>
+                <span class="n">bf</span> <span class="o">=</span> <span class="n">BitField</span><span class="p">(</span><span class="o">**</span><span class="n">data_bf_filtered</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s1">&#39;enums&#39;</span> <span class="ow">in</span> <span class="n">data_bf</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="k">for</span> <span class="n">data_enum</span> <span class="ow">in</span> <span class="n">data_bf</span><span class="p">[</span><span class="s1">&#39;enums&#39;</span><span class="p">]:</span>
+                        <span class="n">bf</span><span class="o">.</span><span class="n">add_enums</span><span class="p">(</span><span class="n">EnumValue</span><span class="p">(</span><span class="o">**</span><span class="n">data_enum</span><span class="p">))</span>
+                <span class="n">reg</span><span class="o">.</span><span class="n">add_bitfields</span><span class="p">(</span><span class="n">bf</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add_registers</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, esynr3z.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

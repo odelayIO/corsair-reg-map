@@ -1,0 +1,883 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>corsair.generators &mdash; Corsair  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7b1f1a5f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Corsair
+              <img src="../../_static/logo_white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../regmap.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config.html">Configuration file</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Protocols</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../apb.html">APB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../axil.html">AXI-Lite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../amm.html">Avalon-MM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lb.html">LocalBus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../regmap-api.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../generators-api.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config-api.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Developer’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Corsair</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">corsair.generators</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for corsair.generators</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Output file generators</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jinja2</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">corsair</span><span class="w"> </span><span class="kn">import</span> <span class="n">__version__</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.regmap</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegisterMap</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wavedrom</span>
+
+
+<div class="viewcode-block" id="Generator">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Generator">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Generator</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base generator class.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span> <span class="o">=</span> <span class="n">rmap</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">etc</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span>
+
+<div class="viewcode-block" id="Generator.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Generator.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Do file generation.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Generator.validate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Generator.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate generator parameters.&quot;&quot;&quot;</span>
+        <span class="c1"># config</span>
+        <span class="n">config</span><span class="o">.</span><span class="n">validate_globcfg</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">)</span>
+        <span class="c1"># rmap</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">,</span> <span class="n">RegisterMap</span><span class="p">),</span> \
+            <span class="s2">&quot;Register map has to be &#39;</span><span class="si">%s</span><span class="s2">&#39;, but &#39;</span><span class="si">%s</span><span class="s2">&#39; was provided for &#39;</span><span class="si">%s</span><span class="s2">&#39; generator!&quot;</span> <span class="o">%</span> <span class="p">(</span>
+                <span class="nb">repr</span><span class="p">(</span><span class="n">RegisterMap</span><span class="p">()),</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Generator.make_target">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Generator.make_target">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">make_target</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Dump class attributes to dictionary that can be used as target for `csrconfig` generation.</span>
+
+<span class="sd">        :param name: Name of the target</span>
+<span class="sd">        :return: Target dictionary</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">params</span> <span class="o">=</span> <span class="nb">vars</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;etc&#39;</span><span class="p">)</span>
+        <span class="n">params</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;rmap&#39;</span><span class="p">)</span>
+        <span class="n">params</span><span class="p">[</span><span class="s1">&#39;generator&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">()</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">params</span><span class="p">}</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Jinja2">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Jinja2">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Jinja2</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic class for rendering Jinja2 templates&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Jinja2.render">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Jinja2.render">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">templates_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render text with Jinja2.</span>
+
+<span class="sd">        :param template: Jinja2 template filename</span>
+<span class="sd">        :param vars: Dictionary with variables for Jinja2 rendering</span>
+<span class="sd">        :param templates_path: Path to search templates. If no path provided, then internal templates will be used</span>
+<span class="sd">        :return: String with rendered text</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># prepare template</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">templates_path</span><span class="p">:</span>
+            <span class="n">templates_path</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s1">&#39;templates&#39;</span><span class="p">)</span>
+        <span class="n">j2_env</span> <span class="o">=</span> <span class="n">jinja2</span><span class="o">.</span><span class="n">Environment</span><span class="p">(</span><span class="n">loader</span><span class="o">=</span><span class="n">jinja2</span><span class="o">.</span><span class="n">FileSystemLoader</span><span class="p">(</span><span class="n">searchpath</span><span class="o">=</span><span class="n">templates_path</span><span class="p">),</span>
+                                    <span class="n">trim_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">lstrip_blocks</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">j2_env</span><span class="o">.</span><span class="n">globals</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">zip</span><span class="o">=</span><span class="nb">zip</span><span class="p">)</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="n">j2_env</span><span class="o">.</span><span class="n">get_template</span><span class="p">(</span><span class="n">template</span><span class="p">)</span>
+        <span class="c1"># render</span>
+        <span class="k">return</span> <span class="n">j2_template</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="nb">vars</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Jinja2.render_to_file">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Jinja2.render_to_file">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">render_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">template</span><span class="p">,</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">templates_path</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Render text with Jinja2 and save it to the file.</span>
+
+<span class="sd">        :param template: Jinja2 template filename</span>
+<span class="sd">        :param vars: Dictionary with variables for Jinja2 rendering</span>
+<span class="sd">        :param path: Path to the output file</span>
+<span class="sd">        :param templates_path: Path to search templates. If no path provided, then internal templates will be used</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># render</span>
+        <span class="n">rendered_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">template</span><span class="p">,</span> <span class="nb">vars</span><span class="p">,</span> <span class="n">templates_path</span><span class="p">)</span>
+        <span class="c1"># save</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">create_dirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">rendered_text</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Wavedrom">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Wavedrom">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Wavedrom</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic class for rendering register images with wavedrom&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Wavedrom.draw_regs">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Wavedrom.draw_regs">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">draw_regs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">imgdir</span><span class="p">,</span> <span class="n">rmap</span><span class="p">):</span>
+        <span class="n">imgdir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">bits</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;data_width&#39;</span><span class="p">]</span>
+        <span class="n">lanes</span> <span class="o">=</span> <span class="n">bits</span> <span class="o">//</span> <span class="mi">16</span> <span class="k">if</span> <span class="n">bits</span> <span class="o">&gt;</span> <span class="mi">16</span> <span class="k">else</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="n">rmap</span><span class="p">:</span>
+            <span class="n">reg_wd</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;reg&quot;</span><span class="p">:</span> <span class="p">[],</span>
+                      <span class="s2">&quot;options&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;bits&quot;</span><span class="p">:</span> <span class="n">bits</span><span class="p">,</span> <span class="s2">&quot;lanes&quot;</span><span class="p">:</span> <span class="n">lanes</span><span class="p">,</span> <span class="s2">&quot;fontsize&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}}</span>
+            <span class="n">bit_pos</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+            <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="n">reg</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">bit_pos</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">bf</span><span class="o">.</span><span class="n">lsb</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">reg_wd</span><span class="p">[</span><span class="s2">&quot;reg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;bits&quot;</span><span class="p">:</span> <span class="n">bf</span><span class="o">.</span><span class="n">lsb</span><span class="p">})</span>
+                <span class="k">elif</span> <span class="n">bf</span><span class="o">.</span><span class="n">lsb</span> <span class="o">-</span> <span class="n">bit_pos</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">reg_wd</span><span class="p">[</span><span class="s2">&quot;reg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;bits&quot;</span><span class="p">:</span> <span class="n">bf</span><span class="o">.</span><span class="n">lsb</span> <span class="o">-</span> <span class="n">bit_pos</span> <span class="o">-</span> <span class="mi">1</span><span class="p">})</span>
+                <span class="n">name</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">name</span>
+                <span class="n">name_max_len</span> <span class="o">=</span> <span class="mi">5</span> <span class="o">*</span> <span class="n">bf</span><span class="o">.</span><span class="n">width</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">name_max_len</span><span class="p">:</span>  <span class="c1"># to prevent labels overlapping</span>
+                    <span class="n">name</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">[:</span><span class="n">name_max_len</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;..&#39;</span>
+                <span class="n">reg_wd</span><span class="p">[</span><span class="s2">&quot;reg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">&quot;attr&quot;</span><span class="p">:</span> <span class="n">bf</span><span class="o">.</span><span class="n">access</span><span class="p">,</span> <span class="s2">&quot;bits&quot;</span><span class="p">:</span> <span class="n">bf</span><span class="o">.</span><span class="n">width</span><span class="p">})</span>
+                <span class="n">bit_pos</span> <span class="o">=</span> <span class="n">bf</span><span class="o">.</span><span class="n">msb</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">bits</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">bit_pos</span><span class="p">:</span>
+                <span class="n">reg_wd</span><span class="p">[</span><span class="s2">&quot;reg&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;bits&quot;</span><span class="p">:</span> <span class="n">bits</span> <span class="o">-</span> <span class="n">bit_pos</span> <span class="o">-</span> <span class="mi">1</span><span class="p">})</span>
+            <span class="n">wavedrom</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">reg_wd</span><span class="p">))</span><span class="o">.</span><span class="n">saveas</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">imgdir</span> <span class="o">/</span> <span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">.svg&quot;</span> <span class="o">%</span> <span class="n">reg</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">())))</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Json">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Json">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Json</span><span class="p">(</span><span class="n">Generator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dump register map to a JSON file.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.json&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+<div class="viewcode-block" id="Json.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Json.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate register map</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;regmap&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())}</span>
+        <span class="c1"># dump</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">create_dirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Yaml">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Yaml">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Yaml</span><span class="p">(</span><span class="n">Generator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dump register map to a YAML file.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.yaml&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+<div class="viewcode-block" id="Yaml.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Yaml.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare data</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;regmap&#39;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span><span class="o">.</span><span class="n">values</span><span class="p">())}</span>
+        <span class="c1"># dump</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">create_dirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">Dumper</span><span class="o">.</span><span class="n">ignore_aliases</span> <span class="o">=</span> <span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="kc">True</span>  <span class="c1"># hack to disable aliases</span>
+            <span class="n">yaml</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">default_flow_style</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">sort_keys</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Txt">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Txt">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Txt</span><span class="p">(</span><span class="n">Generator</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Dump register map to a text table.</span>
+
+<span class="sd">    Note: only registers with single bitfield are allowed.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.txt&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+<div class="viewcode-block" id="Txt.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Txt.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">reg</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Only registers with single bitfield are allowed for </span><span class="si">%s</span><span class="s2"> generator.&quot;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">())</span>
+        <span class="c1"># prepare template strings</span>
+        <span class="n">data_w</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;data_width&#39;</span><span class="p">]</span>
+        <span class="n">address_w</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;address_width&#39;</span><span class="p">]</span>
+        <span class="n">address_digits</span> <span class="o">=</span> <span class="n">address_w</span> <span class="o">//</span> <span class="mi">4</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">address_w</span> <span class="o">%</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">address_str</span> <span class="o">=</span> <span class="s2">&quot;0x%0</span><span class="si">{0}</span><span class="s2">x&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">address_digits</span><span class="p">)</span>
+        <span class="n">reset_digits</span> <span class="o">=</span> <span class="n">data_w</span> <span class="o">//</span> <span class="mi">4</span> <span class="o">+</span> <span class="p">(</span><span class="mi">1</span> <span class="k">if</span> <span class="n">data_w</span> <span class="o">%</span> <span class="mi">4</span> <span class="k">else</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">reset_str</span> <span class="o">=</span> <span class="s2">&quot;0x%0</span><span class="si">{0}</span><span class="s2">x&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">reset_digits</span><span class="p">)</span>
+        <span class="n">row_template</span> <span class="o">=</span> <span class="s2">&quot;| %-</span><span class="si">{0}</span><span class="s2">s | %-</span><span class="si">{1}</span><span class="s2">s | %-</span><span class="si">{2}</span><span class="s2">s | %-</span><span class="si">{3}</span><span class="s2">s | %-</span><span class="si">{4}</span><span class="s2">s | %-</span><span class="si">{5}</span><span class="s2">s | %-</span><span class="si">{6}</span><span class="s2">s |</span><span class="se">\n</span><span class="s2">&quot;</span>
+        <span class="c1"># prepare table data</span>
+        <span class="n">row_top</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Address&quot;</span><span class="p">,</span> <span class="s2">&quot;Name&quot;</span><span class="p">,</span> <span class="s2">&quot;Width&quot;</span><span class="p">,</span> <span class="s2">&quot;Access&quot;</span><span class="p">,</span> <span class="s2">&quot;Hardware&quot;</span><span class="p">,</span> <span class="s2">&quot;Reset&quot;</span><span class="p">,</span> <span class="s2">&quot;Description&quot;</span><span class="p">]</span>
+        <span class="n">col_address</span> <span class="o">=</span> <span class="p">[</span><span class="n">address_str</span> <span class="o">%</span> <span class="n">reg</span><span class="o">.</span><span class="n">address</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">]</span>
+        <span class="n">col_names</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="o">.</span><span class="n">reg_names</span>
+        <span class="n">col_width</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">reg</span><span class="o">.</span><span class="n">bitfields</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">width</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">]</span>
+        <span class="n">col_access</span> <span class="o">=</span> <span class="p">[</span><span class="n">reg</span><span class="o">.</span><span class="n">bitfields</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">access</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">]</span>
+        <span class="n">col_hardware</span> <span class="o">=</span> <span class="p">[</span><span class="n">reg</span><span class="o">.</span><span class="n">bitfields</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">hardware</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">]</span>
+        <span class="n">col_reset</span> <span class="o">=</span> <span class="p">[</span><span class="n">reset_str</span> <span class="o">%</span> <span class="n">reg</span><span class="o">.</span><span class="n">reset</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">]</span>
+        <span class="n">col_description</span> <span class="o">=</span> <span class="p">[</span><span class="n">reg</span><span class="o">.</span><span class="n">description</span> <span class="k">for</span> <span class="n">reg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">]</span>
+        <span class="c1"># calculate width of the columns for pretty printing</span>
+        <span class="n">cols_w</span> <span class="o">=</span> <span class="p">[</span><span class="nb">max</span><span class="p">(</span><span class="n">address_digits</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_top</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span>
+                  <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">col_names</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_top</span><span class="p">[</span><span class="mi">1</span><span class="p">])),</span>
+                  <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">col_width</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_top</span><span class="p">[</span><span class="mi">2</span><span class="p">])),</span>
+                  <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">col_access</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_top</span><span class="p">[</span><span class="mi">3</span><span class="p">])),</span>
+                  <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">col_hardware</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_top</span><span class="p">[</span><span class="mi">4</span><span class="p">])),</span>
+                  <span class="nb">max</span><span class="p">(</span><span class="n">reset_digits</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_top</span><span class="p">[</span><span class="mi">5</span><span class="p">])),</span>
+                  <span class="nb">max</span><span class="p">(</span><span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">col_description</span><span class="p">]),</span> <span class="nb">len</span><span class="p">(</span><span class="n">row_top</span><span class="p">[</span><span class="mi">6</span><span class="p">]))]</span>
+        <span class="n">row_template</span> <span class="o">=</span> <span class="n">row_template</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="o">*</span><span class="n">cols_w</span><span class="p">)</span>
+        <span class="c1"># render</span>
+        <span class="n">out_lines</span> <span class="o">=</span> <span class="p">[</span><span class="n">row_template</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">row_top</span><span class="p">)]</span>
+        <span class="n">out_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_template</span> <span class="o">%</span> <span class="nb">tuple</span><span class="p">([</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="n">w</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">cols_w</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">col_names</span><span class="p">)):</span>
+            <span class="n">out_lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row_template</span> <span class="o">%</span> <span class="p">(</span><span class="n">col_address</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">col_names</span><span class="p">[</span><span class="n">i</span><span class="p">],</span>
+                             <span class="n">col_width</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">col_access</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">col_hardware</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">col_reset</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">col_description</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="c1"># save to file</span>
+        <span class="n">utils</span><span class="o">.</span><span class="n">create_dirs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">writelines</span><span class="p">(</span><span class="n">out_lines</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Verilog">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Verilog">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Verilog</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create Verilog file with register map.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param read_filler: Numeric value to return if wrong address was read</span>
+<span class="sd">    :type read_filler: int</span>
+<span class="sd">    :param interface: Register map bus protocol. Use one of: `axil`, `apb`, `amm`, `lb`</span>
+<span class="sd">    :type interface: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.v&#39;</span><span class="p">,</span> <span class="n">read_filler</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="s1">&#39;axil&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_filler</span> <span class="o">=</span> <span class="n">read_filler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span>
+
+<div class="viewcode-block" id="Verilog.validate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Verilog.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;axil&#39;</span><span class="p">,</span> <span class="s1">&#39;apb&#39;</span><span class="p">,</span> <span class="s1">&#39;amm&#39;</span><span class="p">,</span> <span class="s1">&#39;lb&#39;</span><span class="p">],</span> \
+            <span class="s2">&quot;Unknown &#39;</span><span class="si">%s</span><span class="s2">&#39; interface!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Verilog.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Verilog.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;regmap_verilog.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;rmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;module_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;read_filler&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_filler</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;interface&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Vhdl">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Vhdl">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Vhdl</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create VHDL file with register map.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param read_filler: Numeric value to return if wrong address was read</span>
+<span class="sd">    :type read_filler: int</span>
+<span class="sd">    :param interface: Register map bus protocol. Use one of: `axil`, `apb`, `amm`, `lb`</span>
+<span class="sd">    :type interface: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.vhd&#39;</span><span class="p">,</span> <span class="n">read_filler</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">interface</span><span class="o">=</span><span class="s1">&#39;axil&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_filler</span> <span class="o">=</span> <span class="n">read_filler</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="o">=</span> <span class="n">interface</span>
+
+<div class="viewcode-block" id="Vhdl.validate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Vhdl.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;axil&#39;</span><span class="p">,</span> <span class="s1">&#39;apb&#39;</span><span class="p">,</span> <span class="s1">&#39;amm&#39;</span><span class="p">,</span> <span class="s1">&#39;lb&#39;</span><span class="p">],</span> \
+            <span class="s2">&quot;Unknown &#39;</span><span class="si">%s</span><span class="s2">&#39; interface!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interface</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Vhdl.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Vhdl.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;regmap_vhdl.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;rmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;module_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;read_filler&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">read_filler</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;interface&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">interface</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="VerilogHeader">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.VerilogHeader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VerilogHeader</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create Verilog header file with register map defines.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param prefix: Prefix for the all defines. If empty output file name will be used.</span>
+<span class="sd">    :type prefix: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.vh&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;CSR&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+
+<div class="viewcode-block" id="VerilogHeader.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.VerilogHeader.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;verilog_header.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;rmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
+</div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">VhdlHeader</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create VHDL header file with register map defines.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param prefix: Prefix for the all defines. If empty output file name will be used.</span>
+<span class="sd">    :type prefix: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs_pkg.vhd&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;CSR&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;vhdl_header.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;rmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="CHeader">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.CHeader">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">CHeader</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create C header file with register map defines.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param prefix: Prefix for the all defines and types. If empty output file name will be used.</span>
+<span class="sd">    :type prefix: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.h&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;CSR&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+
+<div class="viewcode-block" id="CHeader.validate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.CHeader.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="n">data_width_allowed</span> <span class="o">=</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">]</span>
+        <span class="k">assert</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;data_width&#39;</span><span class="p">]</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">32</span><span class="p">,</span> <span class="mi">64</span><span class="p">],</span> \
+            <span class="s2">&quot;For </span><span class="si">%s</span><span class="s2"> generator, global &#39;data_width&#39; must be one of &#39;</span><span class="si">%s</span><span class="s2">&#39;, but current is </span><span class="si">%d</span><span class="s2">&quot;</span> <span class="o">%</span> \
+            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">(),</span> <span class="n">data_width_allowed</span><span class="p">,</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;data_width&#39;</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="CHeader.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.CHeader.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;c_header.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;rmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="SystemVerilogPackage">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.SystemVerilogPackage">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">SystemVerilogPackage</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create SystemVerilog package with register map parameters.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param prefix: Prefix for the all parameters and types. If empty output file name will be used.</span>
+<span class="sd">    :type prefix: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs_pkg.sv&#39;</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="s2">&quot;CSR&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span> <span class="o">=</span> <span class="n">prefix</span>
+
+<div class="viewcode-block" id="SystemVerilogPackage.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.SystemVerilogPackage.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;sv_package.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;rmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;prefix&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;file_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LbBridgeVerilog">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.LbBridgeVerilog">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LbBridgeVerilog</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create Verilog file with bridge to Local Bus.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param bridge_type: Bridge protocol. Use one of `axil`, `apb`, `amm`.</span>
+<span class="sd">    :type bridge_type: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;axil2lb.v&#39;</span><span class="p">,</span> <span class="n">bridge_type</span><span class="o">=</span><span class="s1">&#39;axil&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="o">=</span> <span class="n">bridge_type</span>
+
+<div class="viewcode-block" id="LbBridgeVerilog.validate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.LbBridgeVerilog.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;axil&#39;</span><span class="p">,</span> <span class="s1">&#39;apb&#39;</span><span class="p">,</span> <span class="s1">&#39;amm&#39;</span><span class="p">],</span> \
+            <span class="s2">&quot;Unknown &#39;</span><span class="si">%s</span><span class="s2">&#39; bridge type!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LbBridgeVerilog.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.LbBridgeVerilog.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="o">==</span> <span class="s1">&#39;axil&#39;</span><span class="p">:</span>
+            <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;axil2lb_verilog.j2&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="o">==</span> <span class="s1">&#39;apb&#39;</span><span class="p">:</span>
+            <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;apb2lb_verilog.j2&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="o">==</span> <span class="s1">&#39;amm&#39;</span><span class="p">:</span>
+            <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;amm2lb_verilog.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;module_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="LbBridgeVhdl">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.LbBridgeVhdl">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LbBridgeVhdl</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create VHDL file with bridge to Local Bus.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param bridge_type: Bridge protocol. Use one of `axil`, `apb`, `amm`.</span>
+<span class="sd">    :type bridge_type: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;axil2lb.v&#39;</span><span class="p">,</span> <span class="n">bridge_type</span><span class="o">=</span><span class="s1">&#39;axil&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="o">=</span> <span class="n">bridge_type</span>
+
+<div class="viewcode-block" id="LbBridgeVhdl.validate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.LbBridgeVhdl.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;axil&#39;</span><span class="p">,</span> <span class="s1">&#39;apb&#39;</span><span class="p">,</span> <span class="s1">&#39;amm&#39;</span><span class="p">],</span> \
+            <span class="s2">&quot;Unknown &#39;</span><span class="si">%s</span><span class="s2">&#39; bridge type!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LbBridgeVhdl.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.LbBridgeVhdl.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="o">==</span> <span class="s1">&#39;axil&#39;</span><span class="p">:</span>
+            <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;axil2lb_vhdl.j2&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="o">==</span> <span class="s1">&#39;apb&#39;</span><span class="p">:</span>
+            <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;apb2lb_vhdl.j2&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bridge_type</span> <span class="o">==</span> <span class="s1">&#39;amm&#39;</span><span class="p">:</span>
+            <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;amm2lb_vhdl.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;module_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Markdown">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Markdown">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Markdown</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">,</span> <span class="n">Wavedrom</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create documentation for a register map in Markdown.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param title: Document title</span>
+<span class="sd">    :type title: str</span>
+<span class="sd">    :param print_images: Enable generating images for bit fields of a register</span>
+<span class="sd">    :type print_images: bool</span>
+<span class="sd">    :param image_dir: Path to directory where all images will be saved</span>
+<span class="sd">    :type image_dir: str</span>
+<span class="sd">    :param print_conventions: Enable generating table with register access modes explained</span>
+<span class="sd">    :type print_conventions: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.md&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Register map&#39;</span><span class="p">,</span>
+                 <span class="n">print_images</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">image_dir</span><span class="o">=</span><span class="s2">&quot;regs_img&quot;</span><span class="p">,</span> <span class="n">print_conventions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_images</span> <span class="o">=</span> <span class="n">print_images</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_dir</span> <span class="o">=</span> <span class="n">image_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_conventions</span> <span class="o">=</span> <span class="n">print_conventions</span>
+
+<div class="viewcode-block" id="Markdown.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Markdown.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;regmap_md.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;rmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;print_images&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">print_images</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;print_conventions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">print_conventions</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;image_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_dir</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="c1"># draw register images</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_images</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_regs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Asciidoc">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Asciidoc">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Asciidoc</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">,</span> <span class="n">Wavedrom</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create documentation for a register map in AsciiDoc.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    :param title: Document title</span>
+<span class="sd">    :type title: str</span>
+<span class="sd">    :param print_images: Enable generating images for bit fields of a register</span>
+<span class="sd">    :type print_images: bool</span>
+<span class="sd">    :param image_dir: Path to directory where all images will be saved</span>
+<span class="sd">    :type image_dir: str</span>
+<span class="sd">    :param print_conventions: Enable generating table with register access modes explained</span>
+<span class="sd">    :type print_conventions: bool</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.adoc&#39;</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Register map&#39;</span><span class="p">,</span>
+                 <span class="n">print_images</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">image_dir</span><span class="o">=</span><span class="s2">&quot;regs_img&quot;</span><span class="p">,</span> <span class="n">print_conventions</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="n">title</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_images</span> <span class="o">=</span> <span class="n">print_images</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_dir</span> <span class="o">=</span> <span class="n">image_dir</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">print_conventions</span> <span class="o">=</span> <span class="n">print_conventions</span>
+
+<div class="viewcode-block" id="Asciidoc.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Asciidoc.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">filename</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">get_file_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;regmap_asciidoc.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;rmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;print_images&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">print_images</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;print_conventions&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2bool</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">print_conventions</span><span class="p">)</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;image_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_dir</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;filename&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">filename</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;title&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">title</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+        <span class="c1"># draw register images</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">print_images</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">draw_regs</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_dir</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="Python">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Python">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Python</span><span class="p">(</span><span class="n">Generator</span><span class="p">,</span> <span class="n">Jinja2</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create Python file to access register map via some interface.</span>
+
+<span class="sd">    :param rmap: Register map object</span>
+<span class="sd">    :type rmap: :class:`corsair.RegisterMap`</span>
+<span class="sd">    :param path: Path to the output file</span>
+<span class="sd">    :type path: str</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">rmap</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;regs.py&#39;</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">rmap</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
+
+<div class="viewcode-block" id="Python.generate">
+<a class="viewcode-back" href="../../generators-api.html#corsair.generators.Python.generate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># validate parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+        <span class="c1"># prepare jinja2</span>
+        <span class="n">j2_template</span> <span class="o">=</span> <span class="s1">&#39;regmap_py.j2&#39;</span>
+        <span class="n">j2_vars</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;corsair_ver&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">__version__</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;rmap&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rmap</span>
+        <span class="n">j2_vars</span><span class="p">[</span><span class="s1">&#39;config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span>
+        <span class="c1"># render</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_to_file</span><span class="p">(</span><span class="n">j2_template</span><span class="p">,</span> <span class="n">j2_vars</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, esynr3z.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

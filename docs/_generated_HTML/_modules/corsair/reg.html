@@ -1,0 +1,353 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>corsair.reg &mdash; Corsair  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7b1f1a5f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Corsair
+              <img src="../../_static/logo_white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../regmap.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config.html">Configuration file</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Protocols</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../apb.html">APB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../axil.html">AXI-Lite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../amm.html">Avalon-MM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lb.html">LocalBus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../regmap-api.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../generators-api.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config-api.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Developer’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Corsair</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">corsair.reg</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for corsair.reg</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Control and status register</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">config</span>
+
+
+<div class="viewcode-block" id="Register">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.Register">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Register</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Control and status register.</span>
+
+<span class="sd">    :param name: Bit field name</span>
+<span class="sd">    :type name: str</span>
+<span class="sd">    :param description: Bit field description</span>
+<span class="sd">    :type description: str</span>
+<span class="sd">    :param address: Register address</span>
+<span class="sd">    :type address: int, None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;csr0&#39;</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s1">&#39;Control and status register 0&#39;</span><span class="p">,</span> <span class="n">address</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">description</span> <span class="o">=</span> <span class="n">description</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address</span> <span class="o">=</span> <span class="n">address</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">etc</span> <span class="o">=</span> <span class="n">args</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Failed to compare &#39;</span><span class="si">%s</span><span class="s2">&#39; with &#39;</span><span class="si">%s</span><span class="s2">&#39;!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span> <span class="o">!=</span> <span class="n">other</span><span class="o">.</span><span class="vm">__class__</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Failed to compare &#39;</span><span class="si">%s</span><span class="s2">&#39; with &#39;</span><span class="si">%s</span><span class="s2">&#39;!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s1">&#39;Register(</span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">, </span><span class="si">%s</span><span class="s1">)&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">),</span> <span class="nb">repr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">as_str</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Register.as_str">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.Register.as_str">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_str</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create an indented string with the information about the register.&quot;&quot;&quot;</span>
+        <span class="n">inner_indent</span> <span class="o">=</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;  &#39;</span>
+        <span class="n">bitfields</span> <span class="o">=</span> <span class="p">[</span><span class="n">bf</span><span class="o">.</span><span class="n">as_str</span><span class="p">(</span><span class="n">inner_indent</span><span class="p">)</span> <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitfields</span><span class="p">]</span>
+        <span class="n">bitfields_str</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">bitfields</span><span class="p">)</span> <span class="k">if</span> <span class="n">bitfields</span> <span class="k">else</span> <span class="n">inner_indent</span> <span class="o">+</span> <span class="s1">&#39;empty&#39;</span>
+        <span class="n">reg_str</span> <span class="o">=</span> <span class="n">indent</span> <span class="o">+</span> <span class="s1">&#39;(0x</span><span class="si">%x</span><span class="s1">) </span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>
+        <span class="n">reg_str</span> <span class="o">+=</span> <span class="n">bitfields_str</span>
+        <span class="k">return</span> <span class="n">reg_str</span></div>
+
+
+<div class="viewcode-block" id="Register.as_dict">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.Register.as_dict">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">as_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create a dictionary with the key attributes of the register.&quot;&quot;&quot;</span>
+        <span class="n">d</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s1">&#39;description&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+            <span class="s1">&#39;address&#39;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span>
+            <span class="s1">&#39;bitfields&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">bf</span><span class="o">.</span><span class="n">as_dict</span><span class="p">()</span> <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitfields</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="n">d</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">etc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">d</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Calculate number of bit fields inside register&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create iterator over bit fields &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">iter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get bit field by name or index&quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_str</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+                <span class="n">key</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">force_name_case</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+                <span class="k">return</span> <span class="nb">next</span><span class="p">(</span><span class="n">bf</span> <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="bp">self</span> <span class="k">if</span> <span class="n">bf</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">key</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">StopIteration</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">IndexError</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;There is no bit field with the name/index &#39;</span><span class="si">%s</span><span class="s2">&#39; in the &#39;</span><span class="si">%s</span><span class="s2">&#39; register!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__setitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set bit field by key&quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="s2">&quot;Not able to set &#39;</span><span class="si">%s</span><span class="s2">&#39; bit field directly in the &#39;</span><span class="si">%s</span><span class="s2">&#39; register!&quot;</span>
+                       <span class="s2">&quot; Try to use add_bitfields() method.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Name of the register.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">utils</span><span class="o">.</span><span class="n">force_name_case</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_name</span><span class="p">)</span>
+
+    <span class="nd">@name</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;name&#39; attribute has to be &#39;str&#39;, but &#39;</span><span class="si">%s</span><span class="s2">&#39; provided for the register!&quot;</span> <span class="o">%</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_name</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Address of the register.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_address</span>
+
+    <span class="nd">@address</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">address</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_address</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Description of the register.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_description</span>
+
+    <span class="nd">@description</span><span class="o">.</span><span class="n">setter</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">description</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_str</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&#39;description&#39; attribute has to be &#39;str&#39;, but &#39;</span><span class="si">%s</span><span class="s2">&#39; provided for &#39;</span><span class="si">%s</span><span class="s2">&#39; register!&quot;</span> <span class="o">%</span>
+                             <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_description</span> <span class="o">=</span> <span class="n">value</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bitfield_names</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List with all bit field names.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">]</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">bitfields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;List with bit field objects.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span>
+
+<div class="viewcode-block" id="Register.add_bitfields">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.Register.add_bitfields">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">add_bitfields</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_bitfields</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Add bit field or list of bit feilds.</span>
+
+<span class="sd">        Bit fields are automatically sorted and stored in the ascending order of msb attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># hack to handle single elements</span>
+        <span class="n">new_bitfields</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">listify</span><span class="p">(</span><span class="n">new_bitfields</span><span class="p">)</span>
+
+        <span class="c1"># add bit fields to list one by one</span>
+        <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="n">new_bitfields</span><span class="p">:</span>
+            <span class="c1"># check existance</span>
+            <span class="k">assert</span> <span class="n">bf</span><span class="o">.</span><span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitfield_names</span><span class="p">,</span> \
+                <span class="s2">&quot;Bit field with name &#39;</span><span class="si">%s</span><span class="s2">&#39; is already present in &#39;</span><span class="si">%s</span><span class="s2">&#39; register!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="c1"># check fields overlapping</span>
+            <span class="n">overlaps</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">bits</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">old_bf</span><span class="o">.</span><span class="n">bits</span><span class="p">))</span> <span class="k">for</span> <span class="n">old_bf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="p">]</span>
+            <span class="n">overlaps_names</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bitfield_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ovl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">overlaps</span><span class="p">)</span> <span class="k">if</span> <span class="n">ovl</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bitfields</span> <span class="ow">and</span> <span class="n">overlaps_names</span><span class="p">),</span> \
+                <span class="s2">&quot;Position of a bit field &#39;</span><span class="si">%s</span><span class="s2">&#39; conflicts with other bit field(s): </span><span class="si">%s</span><span class="s2">!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">overlaps_names</span><span class="p">))</span>
+            <span class="c1"># check bit field conflicts with data width</span>
+            <span class="n">data_width</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;data_width&#39;</span><span class="p">]</span>
+            <span class="k">assert</span> <span class="n">bf</span><span class="o">.</span><span class="n">msb</span> <span class="o">&lt;</span> <span class="n">data_width</span><span class="p">,</span> \
+                <span class="s2">&quot;Field &#39;</span><span class="si">%s</span><span class="s2">&#39; (msb=</span><span class="si">%d</span><span class="s2">) exceeds interface data width </span><span class="si">%d</span><span class="s2">!&quot;</span> <span class="o">%</span> \
+                <span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bf</span><span class="o">.</span><span class="n">msb</span><span class="p">,</span> <span class="n">data_width</span><span class="p">)</span>
+            <span class="c1"># if we are here - all is ok and bit field can be added</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># find position to insert bit field and not to break ascending order of bit field msb positions</span>
+                <span class="n">bf_idx</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">old_bf</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="p">)</span> <span class="k">if</span> <span class="n">old_bf</span><span class="o">.</span><span class="n">msb</span> <span class="o">&gt;</span> <span class="n">bf</span><span class="o">.</span><span class="n">msb</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">bf_idx</span><span class="p">,</span> <span class="n">bf</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
+                <span class="c1"># when bit field list is empty or all bit field msb positions are less than the current one</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bf</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Reset value of the refister after reset.&quot;&quot;&quot;</span>
+        <span class="n">init</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="bp">self</span><span class="p">:</span>
+            <span class="n">init</span> <span class="o">|=</span> <span class="n">bf</span><span class="o">.</span><span class="n">reset</span> <span class="o">&lt;&lt;</span> <span class="n">bf</span><span class="o">.</span><span class="n">lsb</span>
+        <span class="k">return</span> <span class="n">init</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">access</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Register access mode, based on bitfields.&quot;&quot;&quot;</span>
+        <span class="n">accesses</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">([</span><span class="n">bf</span><span class="o">.</span><span class="n">access</span> <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitfields</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">accesses</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">accesses</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s1">&#39;rw&#39;</span>
+
+<div class="viewcode-block" id="Register.validate">
+<a class="viewcode-back" href="../../regmap-api.html#corsair.Register.validate">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate parameters of the register.&quot;&quot;&quot;</span>
+        <span class="c1"># name</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="s2">&quot;Empty register name is not allowed!&quot;</span>
+        <span class="k">assert</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_first_letter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> \
+            <span class="s2">&quot;&#39;name&#39; value &#39;</span><span class="si">%s</span><span class="s2">&#39; for the register is wrong! Must start from a letter.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># address</span>
+        <span class="k">assert</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_non_neg_int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">),</span> \
+            <span class="s2">&quot;Address value &#39;</span><span class="si">%s</span><span class="s2">&#39; for &#39;</span><span class="si">%s</span><span class="s2">&#39; is wrong! Only non-negative integers are allowed.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+
+        <span class="c1"># bit fields overlapping</span>
+        <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="p">:</span>
+            <span class="n">overlaps</span> <span class="o">=</span> <span class="p">[</span><span class="nb">set</span><span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">bits</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">bf_</span><span class="o">.</span><span class="n">bits</span><span class="p">))</span> <span class="k">for</span> <span class="n">bf_</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="p">]</span>
+            <span class="n">overlaps_names</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">bitfield_names</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">ovl</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">overlaps</span><span class="p">)</span> <span class="k">if</span> <span class="n">ovl</span><span class="p">]</span>
+            <span class="n">overlaps_names</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">overlaps_names</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            <span class="k">assert</span> <span class="ow">not</span> <span class="n">overlaps_names</span><span class="p">,</span> \
+                <span class="s2">&quot;Position and size of a bit field &#39;</span><span class="si">%s</span><span class="s2">&#39; conflicts with other bit field(s): </span><span class="si">%s</span><span class="s2">!&quot;</span> <span class="o">%</span> \
+                <span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nb">repr</span><span class="p">(</span><span class="n">overlaps_names</span><span class="p">))</span>
+
+        <span class="c1"># bit fields vs data_width</span>
+        <span class="n">data_width</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">globcfg</span><span class="p">[</span><span class="s1">&#39;data_width&#39;</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bitfields</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">bf</span><span class="o">.</span><span class="n">msb</span> <span class="o">&lt;</span> <span class="n">data_width</span><span class="p">,</span> \
+                <span class="s2">&quot;Field &#39;</span><span class="si">%s</span><span class="s2">&#39; (msb=</span><span class="si">%d</span><span class="s2">) exceeds interface data width </span><span class="si">%d</span><span class="s2">!&quot;</span> <span class="o">%</span> \
+                <span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">bf</span><span class="o">.</span><span class="n">msb</span><span class="p">,</span> <span class="n">data_width</span><span class="p">)</span>
+
+        <span class="c1"># bit fields</span>
+        <span class="k">for</span> <span class="n">bf</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitfields</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">bitfield_names</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> \
+                <span class="s2">&quot;Bitfield &#39;</span><span class="si">%s</span><span class="s2">&#39; name is not unique!&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">bf</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+            <span class="n">bf</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, esynr3z.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

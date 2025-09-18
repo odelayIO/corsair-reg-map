@@ -1,0 +1,1336 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Generators &mdash; Corsair  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7b1f1a5f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Configuration" href="config-api.html" />
+    <link rel="prev" title="Register map" href="regmap-api.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Corsair
+              <img src="_static/logo_white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regmap.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration file</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Protocols</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="apb.html">APB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="axil.html">AXI-Lite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="amm.html">Avalon-MM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lb.html">LocalBus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="regmap-api.html">Register map</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Generators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#generator">Generator</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Generator"><code class="docutils literal notranslate"><span class="pre">Generator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Generator.generate"><code class="docutils literal notranslate"><span class="pre">Generator.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Generator.make_target"><code class="docutils literal notranslate"><span class="pre">Generator.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Generator.validate"><code class="docutils literal notranslate"><span class="pre">Generator.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#jinja2">Jinja2</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Jinja2"><code class="docutils literal notranslate"><span class="pre">Jinja2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Jinja2.render"><code class="docutils literal notranslate"><span class="pre">Jinja2.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Jinja2.render_to_file"><code class="docutils literal notranslate"><span class="pre">Jinja2.render_to_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#wavedrom">Wavedrom</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Wavedrom"><code class="docutils literal notranslate"><span class="pre">Wavedrom</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Wavedrom.draw_regs"><code class="docutils literal notranslate"><span class="pre">Wavedrom.draw_regs()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#json">Json</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Json"><code class="docutils literal notranslate"><span class="pre">Json</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Json.generate"><code class="docutils literal notranslate"><span class="pre">Json.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Json.make_target"><code class="docutils literal notranslate"><span class="pre">Json.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Json.validate"><code class="docutils literal notranslate"><span class="pre">Json.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#yaml">Yaml</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Yaml"><code class="docutils literal notranslate"><span class="pre">Yaml</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Yaml.generate"><code class="docutils literal notranslate"><span class="pre">Yaml.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Yaml.make_target"><code class="docutils literal notranslate"><span class="pre">Yaml.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Yaml.validate"><code class="docutils literal notranslate"><span class="pre">Yaml.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#txt">Txt</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Txt"><code class="docutils literal notranslate"><span class="pre">Txt</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Txt.generate"><code class="docutils literal notranslate"><span class="pre">Txt.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Txt.make_target"><code class="docutils literal notranslate"><span class="pre">Txt.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Txt.validate"><code class="docutils literal notranslate"><span class="pre">Txt.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#verilog">Verilog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Verilog"><code class="docutils literal notranslate"><span class="pre">Verilog</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Verilog.generate"><code class="docutils literal notranslate"><span class="pre">Verilog.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Verilog.make_target"><code class="docutils literal notranslate"><span class="pre">Verilog.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Verilog.render"><code class="docutils literal notranslate"><span class="pre">Verilog.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Verilog.render_to_file"><code class="docutils literal notranslate"><span class="pre">Verilog.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Verilog.validate"><code class="docutils literal notranslate"><span class="pre">Verilog.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#vhdl">Vhdl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Vhdl"><code class="docutils literal notranslate"><span class="pre">Vhdl</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Vhdl.generate"><code class="docutils literal notranslate"><span class="pre">Vhdl.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Vhdl.make_target"><code class="docutils literal notranslate"><span class="pre">Vhdl.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Vhdl.render"><code class="docutils literal notranslate"><span class="pre">Vhdl.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Vhdl.render_to_file"><code class="docutils literal notranslate"><span class="pre">Vhdl.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Vhdl.validate"><code class="docutils literal notranslate"><span class="pre">Vhdl.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#verilogheader">VerilogHeader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.VerilogHeader"><code class="docutils literal notranslate"><span class="pre">VerilogHeader</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.VerilogHeader.generate"><code class="docutils literal notranslate"><span class="pre">VerilogHeader.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.VerilogHeader.make_target"><code class="docutils literal notranslate"><span class="pre">VerilogHeader.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.VerilogHeader.render"><code class="docutils literal notranslate"><span class="pre">VerilogHeader.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.VerilogHeader.render_to_file"><code class="docutils literal notranslate"><span class="pre">VerilogHeader.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.VerilogHeader.validate"><code class="docutils literal notranslate"><span class="pre">VerilogHeader.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#cheader">CHeader</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.CHeader"><code class="docutils literal notranslate"><span class="pre">CHeader</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.CHeader.generate"><code class="docutils literal notranslate"><span class="pre">CHeader.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.CHeader.make_target"><code class="docutils literal notranslate"><span class="pre">CHeader.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.CHeader.render"><code class="docutils literal notranslate"><span class="pre">CHeader.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.CHeader.render_to_file"><code class="docutils literal notranslate"><span class="pre">CHeader.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.CHeader.validate"><code class="docutils literal notranslate"><span class="pre">CHeader.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#systemverilogpackage">SystemVerilogPackage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.SystemVerilogPackage"><code class="docutils literal notranslate"><span class="pre">SystemVerilogPackage</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.SystemVerilogPackage.generate"><code class="docutils literal notranslate"><span class="pre">SystemVerilogPackage.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.SystemVerilogPackage.make_target"><code class="docutils literal notranslate"><span class="pre">SystemVerilogPackage.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.SystemVerilogPackage.render"><code class="docutils literal notranslate"><span class="pre">SystemVerilogPackage.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.SystemVerilogPackage.render_to_file"><code class="docutils literal notranslate"><span class="pre">SystemVerilogPackage.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.SystemVerilogPackage.validate"><code class="docutils literal notranslate"><span class="pre">SystemVerilogPackage.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#markdown">Markdown</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Markdown"><code class="docutils literal notranslate"><span class="pre">Markdown</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Markdown.draw_regs"><code class="docutils literal notranslate"><span class="pre">Markdown.draw_regs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Markdown.generate"><code class="docutils literal notranslate"><span class="pre">Markdown.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Markdown.make_target"><code class="docutils literal notranslate"><span class="pre">Markdown.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Markdown.render"><code class="docutils literal notranslate"><span class="pre">Markdown.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Markdown.render_to_file"><code class="docutils literal notranslate"><span class="pre">Markdown.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Markdown.validate"><code class="docutils literal notranslate"><span class="pre">Markdown.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#asciidoc">Asciidoc</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Asciidoc"><code class="docutils literal notranslate"><span class="pre">Asciidoc</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Asciidoc.draw_regs"><code class="docutils literal notranslate"><span class="pre">Asciidoc.draw_regs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Asciidoc.generate"><code class="docutils literal notranslate"><span class="pre">Asciidoc.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Asciidoc.make_target"><code class="docutils literal notranslate"><span class="pre">Asciidoc.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Asciidoc.render"><code class="docutils literal notranslate"><span class="pre">Asciidoc.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Asciidoc.render_to_file"><code class="docutils literal notranslate"><span class="pre">Asciidoc.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Asciidoc.validate"><code class="docutils literal notranslate"><span class="pre">Asciidoc.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#python">Python</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.Python"><code class="docutils literal notranslate"><span class="pre">Python</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Python.generate"><code class="docutils literal notranslate"><span class="pre">Python.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Python.make_target"><code class="docutils literal notranslate"><span class="pre">Python.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Python.render"><code class="docutils literal notranslate"><span class="pre">Python.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Python.render_to_file"><code class="docutils literal notranslate"><span class="pre">Python.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.Python.validate"><code class="docutils literal notranslate"><span class="pre">Python.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lbbridgeverilog">LbBridgeVerilog</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.LbBridgeVerilog"><code class="docutils literal notranslate"><span class="pre">LbBridgeVerilog</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVerilog.generate"><code class="docutils literal notranslate"><span class="pre">LbBridgeVerilog.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVerilog.make_target"><code class="docutils literal notranslate"><span class="pre">LbBridgeVerilog.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVerilog.render"><code class="docutils literal notranslate"><span class="pre">LbBridgeVerilog.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVerilog.render_to_file"><code class="docutils literal notranslate"><span class="pre">LbBridgeVerilog.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVerilog.validate"><code class="docutils literal notranslate"><span class="pre">LbBridgeVerilog.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lbbridgevhdl">LbBridgeVhdl</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#corsair.generators.LbBridgeVhdl"><code class="docutils literal notranslate"><span class="pre">LbBridgeVhdl</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVhdl.generate"><code class="docutils literal notranslate"><span class="pre">LbBridgeVhdl.generate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVhdl.make_target"><code class="docutils literal notranslate"><span class="pre">LbBridgeVhdl.make_target()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVhdl.render"><code class="docutils literal notranslate"><span class="pre">LbBridgeVhdl.render()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVhdl.render_to_file"><code class="docutils literal notranslate"><span class="pre">LbBridgeVhdl.render_to_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#corsair.generators.LbBridgeVhdl.validate"><code class="docutils literal notranslate"><span class="pre">LbBridgeVhdl.validate()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="config-api.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Developer’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Corsair</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Generators</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/generators-api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="generators">
+<span id="generators-api"></span><h1>Generators<a class="headerlink" href="#generators" title="Link to this heading"></a></h1>
+<section id="generator">
+<h2>Generator<a class="headerlink" href="#generator" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Generator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Generator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Generator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Generator" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Base generator class.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Generator.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Generator.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Generator.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Generator.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Generator.make_target"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Generator.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Generator.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Generator.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Generator.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="jinja2">
+<h2>Jinja2<a class="headerlink" href="#jinja2" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Jinja2">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Jinja2</span></span><a class="reference internal" href="_modules/corsair/generators.html#Jinja2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Jinja2" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Basic class for rendering Jinja2 templates</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Jinja2.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Jinja2.render"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Jinja2.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Jinja2.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Jinja2.render_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Jinja2.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="wavedrom">
+<h2>Wavedrom<a class="headerlink" href="#wavedrom" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Wavedrom">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Wavedrom</span></span><a class="reference internal" href="_modules/corsair/generators.html#Wavedrom"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Wavedrom" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Basic class for rendering register images with wavedrom</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Wavedrom.draw_regs">
+<span class="sig-name descname"><span class="pre">draw_regs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">imgdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmap</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Wavedrom.draw_regs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Wavedrom.draw_regs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="json">
+<h2>Json<a class="headerlink" href="#json" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Json">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.json'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Json" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a></p>
+<p>Dump register map to a JSON file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Json.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Json.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Json.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Json.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Json.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Json.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Json.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="yaml">
+<h2>Yaml<a class="headerlink" href="#yaml" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Yaml">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.yaml'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Yaml"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Yaml" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a></p>
+<p>Dump register map to a YAML file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Yaml.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Yaml.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Yaml.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Yaml.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Yaml.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Yaml.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Yaml.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="txt">
+<h2>Txt<a class="headerlink" href="#txt" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Txt">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Txt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.txt'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Txt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Txt" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a></p>
+<p>Dump register map to a text table.</p>
+<p>Note: only registers with single bitfield are allowed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Txt.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Txt.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Txt.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Txt.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Txt.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Txt.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Txt.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="verilog">
+<h2>Verilog<a class="headerlink" href="#verilog" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Verilog">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Verilog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.v'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_filler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axil'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Verilog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Verilog" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a></p>
+<p>Create Verilog file with register map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+<li><p><strong>read_filler</strong> (<em>int</em>) – Numeric value to return if wrong address was read</p></li>
+<li><p><strong>interface</strong> (<em>str</em>) – Register map bus protocol. Use one of: <cite>axil</cite>, <cite>apb</cite>, <cite>amm</cite>, <cite>lb</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Verilog.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Verilog.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Verilog.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Verilog.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Verilog.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Verilog.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Verilog.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Verilog.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Verilog.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Verilog.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Verilog.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Verilog.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="vhdl">
+<h2>Vhdl<a class="headerlink" href="#vhdl" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Vhdl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Vhdl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.vhd'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_filler</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">interface</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axil'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Vhdl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Vhdl" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a></p>
+<p>Create VHDL file with register map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+<li><p><strong>read_filler</strong> (<em>int</em>) – Numeric value to return if wrong address was read</p></li>
+<li><p><strong>interface</strong> (<em>str</em>) – Register map bus protocol. Use one of: <cite>axil</cite>, <cite>apb</cite>, <cite>amm</cite>, <cite>lb</cite></p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Vhdl.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Vhdl.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Vhdl.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Vhdl.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Vhdl.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Vhdl.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Vhdl.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Vhdl.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Vhdl.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Vhdl.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Vhdl.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Vhdl.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="verilogheader">
+<h2>VerilogHeader<a class="headerlink" href="#verilogheader" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.VerilogHeader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">VerilogHeader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.vh'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CSR'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#VerilogHeader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.VerilogHeader" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a></p>
+<p>Create Verilog header file with register map defines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – Prefix for the all defines. If empty output file name will be used.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.VerilogHeader.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#VerilogHeader.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.VerilogHeader.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.VerilogHeader.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.VerilogHeader.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.VerilogHeader.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.VerilogHeader.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.VerilogHeader.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.VerilogHeader.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.VerilogHeader.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.VerilogHeader.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="cheader">
+<h2>CHeader<a class="headerlink" href="#cheader" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.CHeader">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">CHeader</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.h'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CSR'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#CHeader"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.CHeader" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a></p>
+<p>Create C header file with register map defines.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – Prefix for the all defines and types. If empty output file name will be used.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.CHeader.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#CHeader.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.CHeader.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.CHeader.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.CHeader.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.CHeader.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.CHeader.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.CHeader.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.CHeader.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.CHeader.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#CHeader.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.CHeader.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="systemverilogpackage">
+<h2>SystemVerilogPackage<a class="headerlink" href="#systemverilogpackage" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.SystemVerilogPackage">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">SystemVerilogPackage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs_pkg.sv'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'CSR'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#SystemVerilogPackage"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.SystemVerilogPackage" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a></p>
+<p>Create SystemVerilog package with register map parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – Prefix for the all parameters and types. If empty output file name will be used.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.SystemVerilogPackage.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#SystemVerilogPackage.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.SystemVerilogPackage.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.SystemVerilogPackage.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.SystemVerilogPackage.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.SystemVerilogPackage.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.SystemVerilogPackage.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.SystemVerilogPackage.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.SystemVerilogPackage.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.SystemVerilogPackage.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.SystemVerilogPackage.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="markdown">
+<h2>Markdown<a class="headerlink" href="#markdown" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Markdown">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Markdown</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.md'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Register</span> <span class="pre">map'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_images</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs_img'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_conventions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Markdown"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Markdown" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a>, <a class="reference internal" href="#corsair.generators.Wavedrom" title="corsair.generators.Wavedrom"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wavedrom</span></code></a></p>
+<p>Create documentation for a register map in Markdown.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Document title</p></li>
+<li><p><strong>print_images</strong> (<em>bool</em>) – Enable generating images for bit fields of a register</p></li>
+<li><p><strong>image_dir</strong> (<em>str</em>) – Path to directory where all images will be saved</p></li>
+<li><p><strong>print_conventions</strong> (<em>bool</em>) – Enable generating table with register access modes explained</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Markdown.draw_regs">
+<span class="sig-name descname"><span class="pre">draw_regs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">imgdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmap</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Markdown.draw_regs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Markdown.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Markdown.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Markdown.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Markdown.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Markdown.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Markdown.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Markdown.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Markdown.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Markdown.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Markdown.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Markdown.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="asciidoc">
+<h2>Asciidoc<a class="headerlink" href="#asciidoc" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Asciidoc">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Asciidoc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.adoc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">title</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'Register</span> <span class="pre">map'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_images</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">image_dir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs_img'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_conventions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Asciidoc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Asciidoc" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a>, <a class="reference internal" href="#corsair.generators.Wavedrom" title="corsair.generators.Wavedrom"><code class="xref py py-class docutils literal notranslate"><span class="pre">Wavedrom</span></code></a></p>
+<p>Create documentation for a register map in AsciiDoc.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+<li><p><strong>title</strong> (<em>str</em>) – Document title</p></li>
+<li><p><strong>print_images</strong> (<em>bool</em>) – Enable generating images for bit fields of a register</p></li>
+<li><p><strong>image_dir</strong> (<em>str</em>) – Path to directory where all images will be saved</p></li>
+<li><p><strong>print_conventions</strong> (<em>bool</em>) – Enable generating table with register access modes explained</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Asciidoc.draw_regs">
+<span class="sig-name descname"><span class="pre">draw_regs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">imgdir</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmap</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Asciidoc.draw_regs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Asciidoc.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Asciidoc.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Asciidoc.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Asciidoc.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Asciidoc.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Asciidoc.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Asciidoc.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Asciidoc.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Asciidoc.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Asciidoc.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Asciidoc.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="python">
+<h2>Python<a class="headerlink" href="#python" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.Python">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">Python</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'regs.py'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Python"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Python" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a></p>
+<p>Create Python file to access register map via some interface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Python.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#Python.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.Python.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Python.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Python.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Python.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Python.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Python.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Python.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.Python.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.Python.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="lbbridgeverilog">
+<h2>LbBridgeVerilog<a class="headerlink" href="#lbbridgeverilog" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVerilog">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">LbBridgeVerilog</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axil2lb.v'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bridge_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axil'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#LbBridgeVerilog"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.LbBridgeVerilog" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a></p>
+<p>Create Verilog file with bridge to Local Bus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+<li><p><strong>bridge_type</strong> (<em>str</em>) – Bridge protocol. Use one of <cite>axil</cite>, <cite>apb</cite>, <cite>amm</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVerilog.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#LbBridgeVerilog.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.LbBridgeVerilog.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVerilog.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.LbBridgeVerilog.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVerilog.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.LbBridgeVerilog.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVerilog.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.LbBridgeVerilog.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVerilog.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#LbBridgeVerilog.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.LbBridgeVerilog.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="lbbridgevhdl">
+<h2>LbBridgeVhdl<a class="headerlink" href="#lbbridgevhdl" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVhdl">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">corsair.generators.</span></span><span class="sig-name descname"><span class="pre">LbBridgeVhdl</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmap</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axil2lb.v'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bridge_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'axil'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#LbBridgeVhdl"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.LbBridgeVhdl" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#corsair.generators.Generator" title="corsair.generators.Generator"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generator</span></code></a>, <a class="reference internal" href="#corsair.generators.Jinja2" title="corsair.generators.Jinja2"><code class="xref py py-class docutils literal notranslate"><span class="pre">Jinja2</span></code></a></p>
+<p>Create VHDL file with bridge to Local Bus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rmap</strong> (<a class="reference internal" href="regmap-api.html#corsair.RegisterMap" title="corsair.RegisterMap"><code class="xref py py-class docutils literal notranslate"><span class="pre">corsair.RegisterMap</span></code></a>) – Register map object</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – Path to the output file</p></li>
+<li><p><strong>bridge_type</strong> (<em>str</em>) – Bridge protocol. Use one of <cite>axil</cite>, <cite>apb</cite>, <cite>amm</cite>.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVhdl.generate">
+<span class="sig-name descname"><span class="pre">generate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#LbBridgeVhdl.generate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.LbBridgeVhdl.generate" title="Link to this definition"></a></dt>
+<dd><p>Do file generation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVhdl.make_target">
+<span class="sig-name descname"><span class="pre">make_target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.LbBridgeVhdl.make_target" title="Link to this definition"></a></dt>
+<dd><p>Dump class attributes to dictionary that can be used as target for <cite>csrconfig</cite> generation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – Name of the target</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Target dictionary</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVhdl.render">
+<span class="sig-name descname"><span class="pre">render</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.LbBridgeVhdl.render" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>String with rendered text</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVhdl.render_to_file">
+<span class="sig-name descname"><span class="pre">render_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">template</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vars</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">templates_path</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#corsair.generators.LbBridgeVhdl.render_to_file" title="Link to this definition"></a></dt>
+<dd><p>Render text with Jinja2 and save it to the file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>template</strong> – Jinja2 template filename</p></li>
+<li><p><strong>vars</strong> – Dictionary with variables for Jinja2 rendering</p></li>
+<li><p><strong>path</strong> – Path to the output file</p></li>
+<li><p><strong>templates_path</strong> – Path to search templates. If no path provided, then internal templates will be used</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="corsair.generators.LbBridgeVhdl.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/corsair/generators.html#LbBridgeVhdl.validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#corsair.generators.LbBridgeVhdl.validate" title="Link to this definition"></a></dt>
+<dd><p>Validate generator parameters.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="regmap-api.html" class="btn btn-neutral float-left" title="Register map" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="config-api.html" class="btn btn-neutral float-right" title="Configuration" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, esynr3z.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,634 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuration file &mdash; Corsair  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7b1f1a5f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="APB" href="apb.html" />
+    <link rel="prev" title="Register map" href="regmap.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Corsair
+              <img src="_static/logo_white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regmap.html">Register map</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Configuration file</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#globcfg-section">globcfg section</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#target-sections">Target sections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#generators">Generators</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#json">Json</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#yaml">Yaml</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#txt">Txt</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verilog">Verilog</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vhdl">Vhdl</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#verilogheader">VerilogHeader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cheader">CHeader</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#systemverilogpackage">SystemVerilogPackage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#markdown">Markdown</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#asciidoc">Asciidoc</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#python">Python</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Protocols</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="apb.html">APB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="axil.html">AXI-Lite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="amm.html">Avalon-MM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lb.html">LocalBus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="regmap-api.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generators-api.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config-api.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Developer’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Corsair</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Configuration file</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/config.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="configuration-file">
+<span id="config"></span><h1>Configuration file<a class="headerlink" href="#configuration-file" title="Link to this heading"></a></h1>
+<p>Corsair uses simple flat INI configuration file called <code class="docutils literal notranslate"><span class="pre">csrconfig</span></code>. It is used for the two things:</p>
+<ul class="simple">
+<li><p>to pass global parameters to corsair</p></li>
+<li><p>to specify all generation targets with their attributes</p></li>
+</ul>
+<p>Example of csrconfig is below:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[globcfg]</span>
+<span class="na">data_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">32</span>
+<span class="na">address_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16</span>
+<span class="na">register_reset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">sync_pos</span>
+
+<span class="k">[v_module]</span>
+<span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regs.v</span>
+<span class="na">interface</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">axil</span>
+<span class="na">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Verilog</span>
+
+<span class="k">[c_header]</span>
+<span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">regs.h</span>
+<span class="na">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">CHeader</span>
+</pre></div>
+</div>
+<p>It has one special section <code class="docutils literal notranslate"><span class="pre">globcfg</span></code> for global parameters, and one or many sections for generation targets.</p>
+<section id="globcfg-section">
+<h2>globcfg section<a class="headerlink" href="#globcfg-section" title="Link to this heading"></a></h2>
+<p>Global parameters available:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default value</p></th>
+<th class="head" colspan="4"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">base_address</span></code></p></td>
+<td><p>0</p></td>
+<td colspan="4"><p>Register map base address in global address map</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">data_width</span></code></p></td>
+<td><p>32</p></td>
+<td colspan="4"><p>Width of all data buses and registers</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">address_width</span></code></p></td>
+<td><p>16</p></td>
+<td colspan="4"><p>Address bus width (capacity of the register map)</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="5"><p><code class="docutils literal notranslate"><span class="pre">register_reset</span></code></p></td>
+<td rowspan="5"><p><code class="docutils literal notranslate"><span class="pre">sync_pos</span></code></p></td>
+<td colspan="4"><p>Flip-flop reset style</p></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p><code class="docutils literal notranslate"><span class="pre">sync_pos</span></code></p></td>
+<td colspan="2"><p>Synchronous active high reset</p></td>
+</tr>
+<tr class="row-odd"><td colspan="2"><p><code class="docutils literal notranslate"><span class="pre">sync_neg</span></code></p></td>
+<td colspan="2"><p>Synchronous active low reset</p></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p><code class="docutils literal notranslate"><span class="pre">async_pos</span></code></p></td>
+<td colspan="2"><p>Asynchronous active high reset</p></td>
+</tr>
+<tr class="row-odd"><td colspan="2"><p><code class="docutils literal notranslate"><span class="pre">async_neg</span></code></p></td>
+<td colspan="2"><p>Asynchronous active low reset</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p><code class="docutils literal notranslate"><span class="pre">address_increment</span></code></p></td>
+<td rowspan="4"><p><code class="docutils literal notranslate"><span class="pre">none</span></code></p></td>
+<td colspan="4"><p>Address auto increment mode, if no address is provided for a register</p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p><code class="docutils literal notranslate"><span class="pre">none</span></code></p></td>
+<td><p>Address auto increment mode is disabled</p></td>
+</tr>
+<tr class="row-even"><td colspan="3"><p><code class="docutils literal notranslate"><span class="pre">data_width</span></code></p></td>
+<td><p>Enable address auto increment with value based on <code class="docutils literal notranslate"><span class="pre">globcfg.data_width</span></code></p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p><code class="docutils literal notranslate"><span class="pre">&lt;positive-integer&gt;</span></code></p></td>
+<td><p>Enable address auto increment with provided number of bytes, e.g 4</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p><code class="docutils literal notranslate"><span class="pre">address_alignment</span></code></p></td>
+<td rowspan="4"><p><code class="docutils literal notranslate"><span class="pre">data_width</span></code></p></td>
+<td colspan="4"><p>Check for address alignment of registers.</p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p><code class="docutils literal notranslate"><span class="pre">none</span></code></p></td>
+<td><p>No check of address alignment</p></td>
+</tr>
+<tr class="row-even"><td colspan="3"><p><code class="docutils literal notranslate"><span class="pre">data_width</span></code></p></td>
+<td><p>Enable check of address alignment based on <code class="docutils literal notranslate"><span class="pre">globcfg.data_width</span></code></p></td>
+</tr>
+<tr class="row-odd"><td colspan="3"><p><code class="docutils literal notranslate"><span class="pre">&lt;positive-integer&gt;</span></code></p></td>
+<td><p>Enable check of address alignment based on provided number of bytes, e.g 4</p></td>
+</tr>
+<tr class="row-even"><td rowspan="4"><p><code class="docutils literal notranslate"><span class="pre">force_name_case</span></code></p></td>
+<td rowspan="4"><p><code class="docutils literal notranslate"><span class="pre">none</span></code></p></td>
+<td colspan="4"><p>Force case for all the names (regsiters, bit fields, enums)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">none</span></code></p></td>
+<td colspan="3"><p>Names used as they are</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lower</span></code></p></td>
+<td colspan="3"><p>Force names to have lowercase</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">upper</span></code></p></td>
+<td colspan="3"><p>Force names to have uppercase</p></td>
+</tr>
+</tbody>
+</table>
+<p>You can omit any of this in your <code class="docutils literal notranslate"><span class="pre">csrconfig</span></code> file - default value will be used.</p>
+<p>You also can add your own parameters and access them inside your custom flow the same way as standart ones. This is valid config:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[globcfg]</span>
+<span class="na">data_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">32</span>
+<span class="na">address_width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">16</span>
+<span class="na">register_reset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">sync_pos</span>
+<span class="na">foo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">bar</span>
+</pre></div>
+</div>
+</section>
+<section id="target-sections">
+<h2>Target sections<a class="headerlink" href="#target-sections" title="Link to this heading"></a></h2>
+<p>Target section defines file generator and specify its parameters.
+Generator is a Python class that produces some output based on input arguments.
+Usually, one target section - one output file.</p>
+<p>Few simple rules to remember:</p>
+<ul class="simple">
+<li><p>target name should be unique</p></li>
+<li><p>targets without <code class="docutils literal notranslate"><span class="pre">generator</span></code> parameter is ignored</p></li>
+</ul>
+<p>Parameter <code class="docutils literal notranslate"><span class="pre">generator</span></code> can be defined in the two ways. To use built-in generator:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[target]</span>
+<span class="na">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">Verilog</span>
+</pre></div>
+</div>
+<p>Or to use custom created one:</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[target]</span>
+<span class="na">generator</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">custom_generator.py::MyCustomGenerator</span>
+</pre></div>
+</div>
+<p>If you are interesting in expanding corsair functionality, there is the <a class="reference external" href="https://github.com/esynr3z/corsair/tree/master/examples/custom_generator">example</a> of how to build your own
+generator and use it with corsair CLI.</p>
+</section>
+<section id="generators">
+<h2>Generators<a class="headerlink" href="#generators" title="Link to this heading"></a></h2>
+<p>Corsair provides many built-in generators:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Generator</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Json</span></code></p></td>
+<td><p>Dump register map to a JSON file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Yaml</span></code></p></td>
+<td><p>Dump register map to a YAML file</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Txt</span></code></p></td>
+<td><p>Dump register map to a text file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Verilog</span></code></p></td>
+<td><p>Create Verilog file with register map</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Vhdl</span></code></p></td>
+<td><p>Create VHDL file with register map</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VerilogHeader</span></code></p></td>
+<td><p>Create Verilog header file with register map defines</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CHeader</span></code></p></td>
+<td><p>Create C header file with register map define</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SystemVerilogPackage</span></code></p></td>
+<td><p>Create SystemVerilog package with register map parameters</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Markdown</span></code></p></td>
+<td><p>Create documentation for a register map in Markdown</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Asciidoc</span></code></p></td>
+<td><p>Create documentation for a register map in AsciiDoc</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Python</span></code></p></td>
+<td><p>Create Python file with register map</p></td>
+</tr>
+</tbody>
+</table>
+<p>There are even more generators but these ones are normally don’t used in <code class="docutils literal notranslate"><span class="pre">csrconfig</span></code> file -
+they are helpfull for creating custom generators or other development tasks:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Generator</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Generator</span></code></p></td>
+<td><p>Base generator class</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Jinja2</span></code></p></td>
+<td><p>Basic class for rendering Jinja2 templates</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Wavedrom</span></code></p></td>
+<td><p>Basic class for rendering register images with wavedrom</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LbBridgeVerilog</span></code></p></td>
+<td><p>Create Verilog file with bridge to Local Bus</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">LbBridgeVhdl</span></code></p></td>
+<td><p>Create Vhdl file with bridge to Local Bus</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>These parameters in <code class="docutils literal notranslate"><span class="pre">csrconfig</span></code> file are nothing but arguments for the class constructor.
+If parameter is not provided - default value will be used.
+Please note that the tables below were created mannualy, while data in <a class="reference internal" href="generators-api.html#generators-api"><span class="std std-ref">Generators API</span></a> page was collected automaticaly.
+As these things are exactrly the same information just in different forms, please refer to API if you have any doubts.</p>
+</div>
+<section id="json">
+<h3>Json<a class="headerlink" href="#json" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.json</span></code></p></td>
+<td><p>Path to the output file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="yaml">
+<h3>Yaml<a class="headerlink" href="#yaml" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.yaml</span></code></p></td>
+<td><p>Path to the output file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="txt">
+<h3>Txt<a class="headerlink" href="#txt" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.txt</span></code></p></td>
+<td><p>Path to the output file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="verilog">
+<h3>Verilog<a class="headerlink" href="#verilog" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head" colspan="2"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.v</span></code></p></td>
+<td colspan="2"><p>Path to the output file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">read_filler</span></code></p></td>
+<td><p>0</p></td>
+<td colspan="2"><p>Numeric value to return if wrong address was read</p></td>
+</tr>
+<tr class="row-even"><td rowspan="5"><p><code class="docutils literal notranslate"><span class="pre">interface</span></code></p></td>
+<td rowspan="5"><p><code class="docutils literal notranslate"><span class="pre">axil</span></code></p></td>
+<td colspan="2"><p>Register map bus protocol</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axil</span></code></p></td>
+<td><p>AXI4-Lite</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">amm</span></code></p></td>
+<td><p>Avalon-MM</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">apb</span></code></p></td>
+<td><p>APB4</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lb</span></code></p></td>
+<td><p>Custom LocalBus interface</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="vhdl">
+<h3>Vhdl<a class="headerlink" href="#vhdl" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head" colspan="2"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.vhd</span></code></p></td>
+<td colspan="2"><p>Path to the output file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">read_filler</span></code></p></td>
+<td><p>0</p></td>
+<td colspan="2"><p>Numeric value to return if wrong address was read</p></td>
+</tr>
+<tr class="row-even"><td rowspan="5"><p><code class="docutils literal notranslate"><span class="pre">interface</span></code></p></td>
+<td rowspan="5"><p><code class="docutils literal notranslate"><span class="pre">axil</span></code></p></td>
+<td colspan="2"><p>Register map bus protocol</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">axil</span></code></p></td>
+<td><p>AXI4-Lite</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">amm</span></code></p></td>
+<td><p>Avalon-MM</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">apb</span></code></p></td>
+<td><p>APB4</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lb</span></code></p></td>
+<td><p>Custom LocalBus interface</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="verilogheader">
+<h3>VerilogHeader<a class="headerlink" href="#verilogheader" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.vh</span></code></p></td>
+<td><p>Path to the output file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">preifx</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CSR</span></code></p></td>
+<td><p>Prefix for all defines. If empty, output file name will be used.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="cheader">
+<h3>CHeader<a class="headerlink" href="#cheader" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.h</span></code></p></td>
+<td><p>Path to the output file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">preifx</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CSR</span></code></p></td>
+<td><p>Prefix for all defines. If empty, output file name will be used.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="systemverilogpackage">
+<h3>SystemVerilogPackage<a class="headerlink" href="#systemverilogpackage" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs_pkg.sv</span></code></p></td>
+<td><p>Path to the output file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">preifx</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">CSR</span></code></p></td>
+<td><p>Prefix for the all parameters. If empty, output file name will be used.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="markdown">
+<h3>Markdown<a class="headerlink" href="#markdown" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.md</span></code></p></td>
+<td><p>Path to the output file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">title</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Register</span> <span class="pre">map</span></code></p></td>
+<td><p>Document title</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">print_images</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
+<td><p>Enable generating images for bit fields of a register</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">image_dir</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs_img</span></code></p></td>
+<td><p>Path to directory where all images will be saved</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">print_conventions</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
+<td><p>Enable generating table with register access modes explained</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="asciidoc">
+<h3>Asciidoc<a class="headerlink" href="#asciidoc" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.md</span></code></p></td>
+<td><p>Path to the output file</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">title</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Register</span> <span class="pre">map</span></code></p></td>
+<td><p>Document title</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">print_images</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
+<td><p>Enable generating images for bit fields of a register</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">image_dir</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs_img</span></code></p></td>
+<td><p>Path to directory where all images will be saved</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">print_conventions</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">True</span></code></p></td>
+<td><p>Enable generating table with register access modes explained</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="python">
+<h3>Python<a class="headerlink" href="#python" title="Link to this heading"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Parameter</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">regs.py</span></code></p></td>
+<td><p>Path to the output file</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="regmap.html" class="btn btn-neutral float-left" title="Register map" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="apb.html" class="btn btn-neutral float-right" title="APB" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, esynr3z.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

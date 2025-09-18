@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>corsair.config &mdash; Corsair  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/custom.css?v=7b1f1a5f" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Corsair
+              <img src="../../_static/logo_white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../regmap.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config.html">Configuration file</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Protocols</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../apb.html">APB</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../axil.html">AXI-Lite</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../amm.html">Avalon-MM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../lb.html">LocalBus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../regmap-api.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../generators-api.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../config-api.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Developer’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Corsair</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">corsair.config</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for corsair.config</h1><div class="highlight"><pre>
+<span></span><span class="ch">#!/usr/bin/env python3</span>
+<span class="c1"># -*- coding: utf-8 -*-</span>
+
+<span class="sd">&quot;&quot;&quot;Module to operate with Corsair configuration files</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.</span><span class="w"> </span><span class="kn">import</span> <span class="n">utils</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">configparser</span>
+
+
+<div class="viewcode-block" id="default_globcfg">
+<a class="viewcode-back" href="../../config-api.html#corsair.config.default_globcfg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">default_globcfg</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a global configuration with parameters by default.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;base_address&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s2">&quot;data_width&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span>
+        <span class="s2">&quot;address_width&quot;</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span>
+        <span class="s2">&quot;register_reset&quot;</span><span class="p">:</span> <span class="s2">&quot;sync_pos&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;address_increment&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;address_alignment&quot;</span><span class="p">:</span> <span class="s2">&quot;data_width&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;force_name_case&quot;</span><span class="p">:</span> <span class="s2">&quot;none&quot;</span><span class="p">,</span>
+    <span class="p">}</span></div>
+
+
+
+<div class="viewcode-block" id="read_csrconfig">
+<a class="viewcode-back" href="../../config-api.html#corsair.config.read_csrconfig">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">read_csrconfig</span><span class="p">(</span><span class="n">cfgpath</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Parse Corsair configuration file. Return two dictionaries: global configuration and targets.&quot;&quot;&quot;</span>
+    <span class="c1"># open config file</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">read_file</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">cfgpath</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">))</span>
+
+    <span class="c1"># parse global config</span>
+    <span class="n">globcfg</span> <span class="o">=</span> <span class="n">default_globcfg</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;globcfg&#39;</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sections</span><span class="p">():</span>
+        <span class="n">globcfg</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="nb">dict</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="s1">&#39;globcfg&#39;</span><span class="p">]))</span>
+        <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;base_address&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;base_address&quot;</span><span class="p">])</span>
+        <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;data_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;data_width&quot;</span><span class="p">])</span>
+        <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_width&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_width&quot;</span><span class="p">])</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_increment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_increment&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_alignment&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">utils</span><span class="o">.</span><span class="n">str2int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_alignment&quot;</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="n">validate_globcfg</span><span class="p">(</span><span class="n">globcfg</span><span class="p">)</span>
+
+    <span class="c1"># parse targets</span>
+    <span class="n">targets</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">target_name</span> <span class="ow">in</span> <span class="p">[</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">cfg</span><span class="o">.</span><span class="n">sections</span><span class="p">()</span> <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s1">&#39;globcfg&#39;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="s1">&#39;generator&#39;</span> <span class="ow">in</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="n">target_name</span><span class="p">])</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">targets</span><span class="p">[</span><span class="n">target_name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="n">cfg</span><span class="p">[</span><span class="n">target_name</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">globcfg</span><span class="p">,</span> <span class="n">targets</span></div>
+
+
+
+<div class="viewcode-block" id="write_csrconfig">
+<a class="viewcode-back" href="../../config-api.html#corsair.config.write_csrconfig">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">write_csrconfig</span><span class="p">(</span><span class="n">cfgpath</span><span class="p">,</span> <span class="n">globcfg</span><span class="p">,</span> <span class="n">targets</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save Corsair configuration file.&quot;&quot;&quot;</span>
+    <span class="n">cfg</span> <span class="o">=</span> <span class="n">configparser</span><span class="o">.</span><span class="n">ConfigParser</span><span class="p">()</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;globcfg&#39;</span><span class="p">:</span> <span class="n">globcfg</span><span class="p">}</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">targets</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">read_dict</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+    <span class="n">cfg</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">cfgpath</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="validate_globcfg">
+<a class="viewcode-back" href="../../config-api.html#corsair.config.validate_globcfg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_globcfg</span><span class="p">(</span><span class="n">globcfg</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate a dictionary with global configuration.&quot;&quot;&quot;</span>
+    <span class="c1"># base_address</span>
+    <span class="k">assert</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_non_neg_int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;base_address&quot;</span><span class="p">]),</span> \
+        <span class="s2">&quot;Wrong value for &#39;base_address&#39;=&#39;</span><span class="si">%s</span><span class="s2">&#39;. Must be a non negative integer.&quot;</span> <span class="o">%</span> <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;base_address&quot;</span><span class="p">]</span>
+
+    <span class="c1"># data_width</span>
+    <span class="k">assert</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_non_neg_int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;data_width&quot;</span><span class="p">]),</span> \
+        <span class="s2">&quot;Wrong value for &#39;data_width&#39;=&#39;</span><span class="si">%s</span><span class="s2">&#39;. Must be a non negative integer.&quot;</span> <span class="o">%</span> <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;data_width&quot;</span><span class="p">]</span>
+
+    <span class="c1"># address_width</span>
+    <span class="k">assert</span> <span class="n">utils</span><span class="o">.</span><span class="n">is_non_neg_int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_width&quot;</span><span class="p">]),</span> \
+        <span class="s2">&quot;Wrong value for &#39;address_width&#39;=&#39;</span><span class="si">%s</span><span class="s2">&#39;. Must be a non negative integer.&quot;</span> <span class="o">%</span> <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_width&quot;</span><span class="p">]</span>
+
+    <span class="c1"># register_reset</span>
+    <span class="n">register_reset_allowed</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;sync_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;sync_neg&#39;</span><span class="p">,</span> <span class="s1">&#39;async_pos&#39;</span><span class="p">,</span> <span class="s1">&#39;async_neg&#39;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;register_reset&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">register_reset_allowed</span><span class="p">,</span> \
+        <span class="s2">&quot;Wrong value for &#39;register_reset&#39;=&#39;</span><span class="si">%s</span><span class="s2">&#39;. Must be one of this: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_width&quot;</span><span class="p">],</span>
+                                                                             <span class="n">register_reset_allowed</span><span class="p">)</span>
+
+    <span class="c1"># address_increment</span>
+    <span class="n">address_increment_alowed</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;data_width&#39;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">is_valid</span> <span class="o">=</span> <span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_increment&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">address_increment_alowed</span> <span class="ow">or</span>
+                    <span class="n">utils</span><span class="o">.</span><span class="n">is_non_neg_int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_increment&quot;</span><span class="p">]))</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">is_valid</span><span class="p">,</span> \
+        <span class="s2">&quot;Wrong value for &#39;address_increment&#39;=&#39;</span><span class="si">%s</span><span class="s2">&#39;. Must be one of this: </span><span class="si">%s</span><span class="s2"> or a non negative integer.&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_increment&quot;</span><span class="p">],</span> <span class="n">address_increment_alowed</span><span class="p">)</span>
+
+    <span class="c1"># address_alignment</span>
+    <span class="n">address_alignment_alowed</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;data_width&#39;</span><span class="p">]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">is_valid</span> <span class="o">=</span> <span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_alignment&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">address_alignment_alowed</span> <span class="ow">or</span>
+                    <span class="n">utils</span><span class="o">.</span><span class="n">is_non_neg_int</span><span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_alignment&quot;</span><span class="p">]))</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="n">is_valid</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">assert</span> <span class="n">is_valid</span><span class="p">,</span> \
+        <span class="s2">&quot;Wrong value for &#39;address_alignment&#39;=&#39;</span><span class="si">%s</span><span class="s2">&#39;. Must be one of this: </span><span class="si">%s</span><span class="s2"> or a non negative integer.&quot;</span> <span class="o">%</span> <span class="p">(</span>
+            <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;address_alignment&quot;</span><span class="p">],</span> <span class="n">address_alignment_alowed</span><span class="p">)</span>
+
+    <span class="c1"># force_name_case</span>
+    <span class="n">force_name_case_allowed</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lower&#39;</span><span class="p">,</span> <span class="s1">&#39;upper&#39;</span><span class="p">,</span> <span class="s1">&#39;none&#39;</span><span class="p">]</span>
+    <span class="k">assert</span> <span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;force_name_case&quot;</span><span class="p">]</span> <span class="ow">in</span> <span class="n">force_name_case_allowed</span><span class="p">,</span> \
+        <span class="s2">&quot;Wrong value for &#39;force_name_case&#39;=&#39;</span><span class="si">%s</span><span class="s2">&#39;. Must be one of this: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">globcfg</span><span class="p">[</span><span class="s2">&quot;force_name_case&quot;</span><span class="p">],</span>
+                                                                              <span class="n">force_name_case_allowed</span><span class="p">)</span></div>
+
+
+
+<span class="n">globcfg</span> <span class="o">=</span> <span class="n">default_globcfg</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="set_globcfg">
+<a class="viewcode-back" href="../../config-api.html#corsair.config.set_globcfg">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">set_globcfg</span><span class="p">(</span><span class="n">globcfg_</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Use specified global configuration for all operations&quot;&quot;&quot;</span>
+    <span class="k">global</span> <span class="n">globcfg</span>
+    <span class="n">validate_globcfg</span><span class="p">(</span><span class="n">globcfg_</span><span class="p">)</span>
+    <span class="n">globcfg</span> <span class="o">=</span> <span class="n">globcfg_</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, esynr3z.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,259 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AXI-Lite &mdash; Corsair  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/custom.css?v=7b1f1a5f" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Avalon-MM" href="amm.html" />
+    <link rel="prev" title="APB" href="apb.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Corsair
+              <img src="_static/logo_white.png" class="logo" alt="Logo"/>
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Basics</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="regmap.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config.html">Configuration file</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Protocols</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="apb.html">APB</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">AXI-Lite</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#signals">Signals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#protocol">Protocol</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="amm.html">Avalon-MM</a></li>
+<li class="toctree-l1"><a class="reference internal" href="lb.html">LocalBus</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">API</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="regmap-api.html">Register map</a></li>
+<li class="toctree-l1"><a class="reference internal" href="generators-api.html">Generators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="config-api.html">Configuration</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Miscellaneous</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Developer’s guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="changelog.html">Changelog</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Corsair</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">AXI-Lite</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/axil.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="axi-lite">
+<span id="axil"></span><h1>AXI-Lite<a class="headerlink" href="#axi-lite" title="Link to this heading"></a></h1>
+<section id="signals">
+<h2>Signals<a class="headerlink" href="#signals" title="Link to this heading"></a></h2>
+<p>These signals will be used in the interface of the register map.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Signal</p></th>
+<th class="head"><p>Width</p></th>
+<th class="head"><p>Direction</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>axil_awaddr</p></td>
+<td><p>&gt;1</p></td>
+<td><p>input</p></td>
+<td><p>Write address channel: write address</p></td>
+</tr>
+<tr class="row-odd"><td><p>axil_awprot</p></td>
+<td><p>3</p></td>
+<td><p>input</p></td>
+<td><p>Write address channel: protection type</p></td>
+</tr>
+<tr class="row-even"><td><p>axil_awvalid</p></td>
+<td><p>1</p></td>
+<td><p>input</p></td>
+<td><p>Write address channel: write address valid</p></td>
+</tr>
+<tr class="row-odd"><td><p>axil_awready</p></td>
+<td><p>1</p></td>
+<td><p>output</p></td>
+<td><p>Write address channel: write address ready</p></td>
+</tr>
+<tr class="row-even"><td><p>axil_wdata</p></td>
+<td><p>&gt;1</p></td>
+<td><p>input</p></td>
+<td><p>Write data channel: write data</p></td>
+</tr>
+<tr class="row-odd"><td><p>axil_wstrb</p></td>
+<td><p>&gt;1</p></td>
+<td><p>input</p></td>
+<td><p>Write data channel: write strobes</p></td>
+</tr>
+<tr class="row-even"><td><p>axil_wvalid</p></td>
+<td><p>1</p></td>
+<td><p>input</p></td>
+<td><p>Write data channel: write valid</p></td>
+</tr>
+<tr class="row-odd"><td><p>axil_wready</p></td>
+<td><p>1</p></td>
+<td><p>output</p></td>
+<td><p>Write data channel: write ready</p></td>
+</tr>
+<tr class="row-even"><td><p>axil_bresp</p></td>
+<td><p>2</p></td>
+<td><p>output</p></td>
+<td><p>Write response channel: write response</p></td>
+</tr>
+<tr class="row-odd"><td><p>axil_bvalid</p></td>
+<td><p>1</p></td>
+<td><p>output</p></td>
+<td><p>Write response channel: write valid</p></td>
+</tr>
+<tr class="row-even"><td><p>axil_bready</p></td>
+<td><p>1</p></td>
+<td><p>input</p></td>
+<td><p>Write response channel: write ready</p></td>
+</tr>
+<tr class="row-odd"><td><p>axil_araddr</p></td>
+<td><p>&gt;1</p></td>
+<td><p>input</p></td>
+<td><p>Read address channel: read address</p></td>
+</tr>
+<tr class="row-even"><td><p>axil_arprot</p></td>
+<td><p>3</p></td>
+<td><p>input</p></td>
+<td><p>Read address channel: protection type</p></td>
+</tr>
+<tr class="row-odd"><td><p>axil_arvalid</p></td>
+<td><p>1</p></td>
+<td><p>input</p></td>
+<td><p>Read address channel: read address valid</p></td>
+</tr>
+<tr class="row-even"><td><p>axil_arready</p></td>
+<td><p>1</p></td>
+<td><p>output</p></td>
+<td><p>Read address channel: read address ready</p></td>
+</tr>
+<tr class="row-odd"><td><p>axil_rdata</p></td>
+<td><p>&gt;1</p></td>
+<td><p>output</p></td>
+<td><p>Read data channel: read data</p></td>
+</tr>
+<tr class="row-even"><td><p>axil_rresp</p></td>
+<td><p>2</p></td>
+<td><p>output</p></td>
+<td><p>Read data channel: read response</p></td>
+</tr>
+<tr class="row-odd"><td><p>axil_rvalid</p></td>
+<td><p>1</p></td>
+<td><p>output</p></td>
+<td><p>Read data channel: read valid</p></td>
+</tr>
+<tr class="row-even"><td><p>axil_rready</p></td>
+<td><p>1</p></td>
+<td><p>input</p></td>
+<td><p>Read data channel: read ready</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Specific bit widths for buses are defined in <code class="docutils literal notranslate"><span class="pre">globcfg</span></code> section of a <code class="docutils literal notranslate"><span class="pre">csrconfig</span></code> file.</p>
+</div>
+<p>Implementation details:</p>
+<ul class="simple">
+<li><p>AXI4-Lite slave</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*resp</span></code> signals are tied to 0 - always <code class="docutils literal notranslate"><span class="pre">OKAY</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">*prot</span></code> signals are not handled</p></li>
+</ul>
+</section>
+<section id="protocol">
+<h2>Protocol<a class="headerlink" href="#protocol" title="Link to this heading"></a></h2>
+<p>Refer to official ARM documentation: <a class="reference external" href="https://developer.arm.com/documentation/ihi0022/e/">IHI0022G AMBA AXI and ACE Protocol Specification AXI3, AXI4, and AXI4-Lite ACE and ACE-Lite</a>.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="apb.html" class="btn btn-neutral float-left" title="APB" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="amm.html" class="btn btn-neutral float-right" title="Avalon-MM" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2021, esynr3z.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
