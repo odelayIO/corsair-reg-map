@@ -2,9 +2,12 @@
 
 ![corsair_logo](docs/img/logo.png)
 
-[![Documentation Status](https://readthedocs.org/projects/corsair/badge/?version=latest)](https://corsair.readthedocs.io/en/latest/?badge=latest)
-![PyTest Status](https://github.com/esynr3z/corsair/workflows/pytest/badge.svg)
-[![PyPI version](https://badge.fury.io/py/corsair.svg)](https://badge.fury.io/py/corsair)
+#### Clone Command
+
+```
+git clone --recursive git@github.com:odelayIO/corsair-reg-map.git
+```
+
 
 
 Corsair is a tool that makes it easy to create and maintain control and status register (CSR) map for any HDL project. It allows you to describe your register map in a single file and then generate HDL code, headers, documentation and other things. This effectively eliminates any mismatches between hardware, software and documentation of your IP-core.
